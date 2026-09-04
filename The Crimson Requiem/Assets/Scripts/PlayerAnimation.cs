@@ -16,4 +16,9 @@ public class PlayerAnimation : MonoBehaviour
     {
         animator.SetBool("IsMoving", playerScript.GetIsMoving());
     }
+
+    // public void Attack()
+    // {
+    //     animator.SetTrigger("Attack");
+    // }
 }
