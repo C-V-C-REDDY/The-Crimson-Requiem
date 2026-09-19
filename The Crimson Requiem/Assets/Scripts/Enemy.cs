@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -10,11 +11,15 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     [Header("Data")]
     public EnemyData data;
+    public Slider healthBar;
 
     private NavMeshAgent agent;
     private Transform player;
     private float currentHealth;
     private float lastAttackTime;
+    private SkinnedMeshRenderer meshRenderer;
+    private Color originalColor;
+    private MaterialPropertyBlock propertyBlock;
 
 
 
@@ -22,12 +27,17 @@ public class Enemy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
+        meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+        originalColor = meshRenderer.material.color;
+        propertyBlock = new MaterialPropertyBlock();
     }
     
     void Start()
     {
         currentHealth = data.maxHealth;
         agent.speed = data.moveSpeed;
+        healthBar.maxValue = data.maxHealth;
+        healthBar.value = currentHealth;
 
         player = GameObject.FindGameObjectWithTag("Player").transform;
         
@@ -66,8 +76,12 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
+
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, data.maxHealth);
+        healthBar.value = currentHealth;
+        JuiceManager.Instance.Hitstop(0.1f); // Hitstop for 0.1 seconds
+        JuiceManager.Instance.ScreenShake(0.5f);
 
         if (currentHealth <= 0f)
         {
@@ -75,7 +89,10 @@ public class Enemy : MonoBehaviour
         }
         else
         {
+
             animator.SetTrigger("Hit");
+            StartCoroutine(Flash(0.08f)); // Flash for 0.08 seconds
+ // Screen shake with a force of 0.1f
         }
     }
 
@@ -92,5 +109,15 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+    }
+
+    IEnumerator Flash(float duration)
+    {
+        meshRenderer.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetColor("_Color", Color.black);
+        meshRenderer.SetPropertyBlock(propertyBlock);
+        yield return new WaitForSeconds(duration);
+        propertyBlock.SetColor("_Color", originalColor);
+        meshRenderer.SetPropertyBlock(propertyBlock);
     }
 }
