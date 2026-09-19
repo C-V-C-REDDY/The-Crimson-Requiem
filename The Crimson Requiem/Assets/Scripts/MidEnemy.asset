@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: MidEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Mid
-  maxHealth: 35
-  moveSpeed: 4
+  maxHealth: 20
+  moveSpeed: 5
   damage: 10
   attackRange: 1.5
   attackCooldown: 1.5

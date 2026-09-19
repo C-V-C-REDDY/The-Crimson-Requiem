@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SmallEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Small
-  maxHealth: 15
+  maxHealth: 10
   moveSpeed: 5.5
-  damage: 5
+  damage: 6
   attackRange: 1
   attackCooldown: 1
   attackWindup: 0

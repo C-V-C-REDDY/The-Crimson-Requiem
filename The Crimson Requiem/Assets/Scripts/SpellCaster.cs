@@ -36,6 +36,11 @@ public class SpellCaster : MonoBehaviour
 
 
         Vector3 direction = GetAimDirection();
+        
+        if(direction != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
         darkOrbEffect.Cast(firePoint.position, direction, darkOrbData);
     }
 
