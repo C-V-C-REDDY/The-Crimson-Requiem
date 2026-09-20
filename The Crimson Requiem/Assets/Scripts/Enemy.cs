@@ -20,6 +20,8 @@ public class Enemy : MonoBehaviour
     private SkinnedMeshRenderer meshRenderer;
     private Color originalColor;
     private MaterialPropertyBlock propertyBlock;
+    [SerializeField] private float hitStopDuration = 0.1f; // Duration of hitstop in seconds
+    [SerializeField] private float screenShakeForce = 0.1f; // Force of screen shake
 
 
 
@@ -80,8 +82,8 @@ public class Enemy : MonoBehaviour
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, data.maxHealth);
         healthBar.value = currentHealth;
-        JuiceManager.Instance.Hitstop(0.1f); // Hitstop for 0.1 seconds
-        JuiceManager.Instance.ScreenShake(0.5f);
+        JuiceManager.Instance.Hitstop(hitStopDuration);
+        JuiceManager.Instance.ScreenShake(screenShakeForce);
 
         if (currentHealth <= 0f)
         {

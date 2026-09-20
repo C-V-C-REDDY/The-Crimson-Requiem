@@ -3,6 +3,8 @@ using UnityEngine;
 public class DarkOrbProjectile : MonoBehaviour
 {
     public float damage;
+    [SerializeField] private float impactEffectDuration = 1f; // Duration for which the impact effect will be visible
+    [SerializeField] private GameObject impactEffectPrefab; // Prefab for the impact effect
 
     void OnTriggerEnter(Collider other)
     {
@@ -11,7 +13,11 @@ public class DarkOrbProjectile : MonoBehaviour
         {
             // Assuming the enemy has a method to take damage
             other.GetComponent<Enemy>().TakeDamage(damage);
+
+            GameObject impactEffect = Instantiate(impactEffectPrefab, transform.position, Quaternion.identity); // Instantiate the impact effect
+            Destroy(impactEffect, impactEffectDuration); // Destroy the impact effect after the specified duration
             Destroy(gameObject); // Destroy the projectile after hitting an enemy
+            
         }
     }
 }
