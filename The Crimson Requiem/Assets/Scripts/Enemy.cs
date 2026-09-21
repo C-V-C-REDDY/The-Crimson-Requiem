@@ -104,6 +104,7 @@ public class Enemy : MonoBehaviour
         agent.enabled = false;
         this.enabled = false; // Disable the Enemy script to stop further updates
         Debug.Log(data.enemyName + " has died.");
+        EnemyManager.Instance.UnregisterEnemy(this);
         StartCoroutine(DestroyAfterDeath(3f)); // Destroy after 3 seconds to allow death animation to play
     }
 
