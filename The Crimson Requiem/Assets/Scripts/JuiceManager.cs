@@ -13,7 +13,7 @@ public class JuiceManager : MonoBehaviour
         Instance = this;
     }
 
-    public void Hitstop(float duration = 0.05f)
+    public void Hitstop(float duration)
     {
         StartCoroutine(DoHitStop(duration));
     }
@@ -25,7 +25,7 @@ public class JuiceManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    public void ScreenShake(float force = 0.03f)
+    public void ScreenShake(float force)
     {
         impulseSource.GenerateImpulse(force);
     }

@@ -105,6 +105,7 @@ public class Enemy : MonoBehaviour
         this.enabled = false; // Disable the Enemy script to stop further updates
         Debug.Log(data.enemyName + " has died.");
         EnemyManager.Instance.UnregisterEnemy(this);
+        GetComponent<Collider>().enabled = false; // Disable the collider to prevent further interactions
         StartCoroutine(DestroyAfterDeath(3f)); // Destroy after 3 seconds to allow death animation to play
     }
 
@@ -122,5 +123,16 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(duration);
         propertyBlock.SetColor("_Color", originalColor);
         meshRenderer.SetPropertyBlock(propertyBlock);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(data.enemyName + other.name + " hit the boundary line and dealt " + data.damage + " damage.");
+        if (other.CompareTag("BoundaryLine"))
+        {
+            BoundaryLine.Instance.TakeDamage(data.damage);
+            // Debug.Log(data.enemyName + " hit the boundary line and dealt " + data.damage + " damage.");
+            Die(); // Enemy dies after hitting the boundary line
+        }
     }
 }
