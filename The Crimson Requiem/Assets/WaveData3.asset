@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11eb0315b86e38a4d9972f9604ff8e6c, type: 3}
+  m_Name: WaveData3
+  m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  waveNumber: 3
+  totalEnemyCount: 30
+  spawnInterval: 2
+  enemyPool:
+  - enemyPrefab: {fileID: 6593031064096334802, guid: ac76ef002be76b14c8c23826e87cc47a, type: 3}
+    spawnWeight: 5
+  - enemyPrefab: {fileID: 1937041451794641023, guid: 40b39e25036a03644a63dc66f2ef267f, type: 3}
+    spawnWeight: 3
+  - enemyPrefab: {fileID: 8395119973179290418, guid: 4e81891a44719834d8ff5a21b2633e38, type: 3}
+    spawnWeight: 3

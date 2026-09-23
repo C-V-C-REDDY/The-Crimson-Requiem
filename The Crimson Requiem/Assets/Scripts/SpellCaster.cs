@@ -9,6 +9,7 @@ public class SpellCaster : MonoBehaviour
     private DarkOrbEffect darkOrbEffect;
     private float lastCastTime;
     public Animator animator;
+    public LayerMask groundLayerMask; // Layer mask for the ground
 
     public PlayerAnimation playerAnimation; // Reference to the PlayerAnimation script
 
@@ -47,7 +48,7 @@ public class SpellCaster : MonoBehaviour
     Vector3 GetAimDirection()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, groundLayerMask))
         {
             Vector3 targetPoint = hit.point;
             targetPoint.y = firePoint.position.y; // Keep the y-coordinate the same as the fire point

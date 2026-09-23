@@ -27,11 +27,14 @@ public class EnemyManager : MonoBehaviour
     public void UnregisterEnemy(Enemy enemy)
     {
         activeEnemies.Remove(enemy);
+        CheckWaveCompletion();
     }
 
     public void NotifyWaveFullySpawned(bool value)
     {
         waveFullySpawned = true;
+        Debug.Log("Wave completed! All enemies defeated.");
+
         CheckWaveCompletion();
     }
 
@@ -39,8 +42,9 @@ public class EnemyManager : MonoBehaviour
     {
         if (waveFullySpawned && activeEnemies.Count == 0)
         {
+            Debug.Log("Wave completed! All enemies defeated.");
             waveFullySpawned = false; // Reset for the next wave
-            // EnemySpawner.Instance.GotoNextWave();
+            EnemySpawner.Instance.GotoNextWave();
             
         }
     }

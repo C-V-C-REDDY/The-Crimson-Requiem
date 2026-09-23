@@ -76,4 +76,15 @@ public class EnemySpawner : MonoBehaviour
         Vector2 randomCircle = Random.insideUnitCircle * radius;
         return portalSpawnPoint.position + new Vector3(randomCircle.x, 0f , randomCircle.y);
     }
+
+    public void GotoNextWave()
+    {
+        currentWave++;
+        if (currentWave >= waves.Length)
+        {
+            Debug.Log("All waves completed!");
+            return;
+        }
+        StartCoroutine(SpawnWave(waves[currentWave]));
+    }
 }

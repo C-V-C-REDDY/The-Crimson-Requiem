@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Large
   maxHealth: 20
-  moveSpeed: 1.5
+  moveSpeed: 5
   damage: 20
   attackRange: 2
   attackCooldown: 2.5
