@@ -9,6 +9,7 @@ public class ElementalCaster : MonoBehaviour
     public event System.Action OnCastStarted;
 
     [SerializeField] WaterSpellData waterData;
+    [SerializeField] WindSpellData windData;
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
@@ -23,6 +24,15 @@ public class ElementalCaster : MonoBehaviour
         {
             Debug.Log("1 Pressed");
             TryCastWater();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if(SpellEconomy.Instance.TryCastElemental())
+            {
+                Debug.Log("2 Pressed");
+                OnCastStarted?.Invoke();
+                StartCoroutine(CastWind(windData));
+            }
         }
     }
 
@@ -70,6 +80,18 @@ public class ElementalCaster : MonoBehaviour
             yield return null;
         }
         colorAdj.colorFilter.value = to;
+    }
+
+    private IEnumerator CastWind(WindSpellData data)
+    {
+        GameObject tornado = Instantiate(data.tornadoPrefab, data.tornadoPosition, Quaternion.identity);
+        var enemies = new List<Enemy>(EnemyManager.Instance.activeEnemies);
+        foreach(Enemy e in enemies)
+        {
+            if(e != null) e.ApplyTornado(data);
+        }
+        yield return new WaitForSeconds(data.pullInDuration + data.orbitDuration);
+        Destroy(tornado);
     }
 
     

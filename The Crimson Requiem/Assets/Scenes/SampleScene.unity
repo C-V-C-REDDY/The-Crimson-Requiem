@@ -401,6 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ElementalCaster
   waterData: {fileID: 11400000, guid: df71afbc6cab8e04ebec94e5015fc3da, type: 2}
+  windData: {fileID: 11400000, guid: 20f04a75a406ff34d9aa82d42c1487ad, type: 2}
   globalVolume: {fileID: 832575518}
 --- !u!1 &330585543
 GameObject:
