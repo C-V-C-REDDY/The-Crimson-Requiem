@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceca0fa127d8d3546bbdb876455d9f4b, type: 3}
+  m_Name: New Water Spell Data
+  m_EditorClassIdentifier: Assembly-CSharp::WaterSpellData
+  spellName: 
+  tier: 0
+  castVFXDelay: 0
+  staffCastAnim: {fileID: 1275742968038681123, guid: f35ac3ca7a918534a9e7a82d1eebc412, type: 3}
+  slowMultiplier: 0.5
+  slowDuration: 3
+  fogVFXDuration: 2
+  tintDuration: 5
+  tintFadeDuration: 1

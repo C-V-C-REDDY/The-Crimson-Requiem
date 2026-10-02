@@ -34,6 +34,7 @@ public class SpellCaster : MonoBehaviour
         }
 
         lastCastTime = Time.time;
+        // animator.SetTrigger("CastAnim");
 
 
         Vector3 direction = GetAimDirection();
@@ -42,6 +43,7 @@ public class SpellCaster : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(direction);
         }
+        // animator.SetTrigger("CastAnim");
         darkOrbEffect.Cast(firePoint.position, direction, darkOrbData);
     }
 

@@ -12,7 +12,7 @@ public class DarkOrbProjectile : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             // Assuming the enemy has a method to take damage
-            other.GetComponent<Enemy>().TakeDamage(damage);
+            other.GetComponent<Enemy>().TakeDamage(damage, Enemy.DamageSource.PlayerSpell);
 
             GameObject impactEffect = Instantiate(impactEffectPrefab, transform.position, Quaternion.identity); // Instantiate the impact effect
             Destroy(impactEffect, impactEffectDuration); // Destroy the impact effect after the specified duration

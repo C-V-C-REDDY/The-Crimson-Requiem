@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(NavMeshAgent))]
 
@@ -17,11 +18,15 @@ public class Enemy : MonoBehaviour
     private Transform player;
     private float currentHealth;
     private float lastAttackTime;
+    private float baseMoveSpeed;
     private SkinnedMeshRenderer meshRenderer;
     private Color originalColor;
     private MaterialPropertyBlock propertyBlock;
     [SerializeField] private float hitStopDuration = 0.1f; // Duration of hitstop in seconds
     [SerializeField] private float screenShakeForce = 0.1f; // Force of screen shake
+    public enum DamageSource {PlayerSpell, Boundary}
+    private Coroutine slowCoroutine;
+    public IReadOnlyList<Enemy> ActiveEnemies => ActiveEnemies;
 
 
 
@@ -40,7 +45,7 @@ public class Enemy : MonoBehaviour
         agent.speed = data.moveSpeed;
         healthBar.maxValue = data.maxHealth;
         healthBar.value = currentHealth;
-
+        baseMoveSpeed = agent.speed;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         
     }
@@ -48,6 +53,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if (player == null) return;
+        if(Input.GetKeyDown(KeyCode.T)) Debug.Log("TimeScale: " + Time.timeScale);
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
          if (distanceToPlayer > data.attackRange)
@@ -76,7 +82,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, DamageSource source)
     {
 
         currentHealth -= amount;
@@ -87,7 +93,7 @@ public class Enemy : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
-            Die();
+            Die(source);
         }
         else
         {
@@ -98,12 +104,17 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void Die()
+    void Die(DamageSource source)
     {
+        if(source == DamageSource.PlayerSpell)
+        {
+            SpellEconomy.Instance.OnPlayerKill();
+            Debug.Log("Killed by PlayerSpell!");
+        }
+        animator.speed = 1f; // Reset animation speed to normal
         animator.SetTrigger("Die");
         agent.enabled = false;
         this.enabled = false; // Disable the Enemy script to stop further updates
-        Debug.Log(data.enemyName + " has died.");
         EnemyManager.Instance.UnregisterEnemy(this);
         GetComponent<Collider>().enabled = false; // Disable the collider to prevent further interactions
         StartCoroutine(DestroyAfterDeath(3f)); // Destroy after 3 seconds to allow death animation to play
@@ -113,6 +124,24 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+    }
+
+    public void ApplySlow(float multiplier, float duration)
+    {
+        Debug.Log("Slow applied");
+        if(slowCoroutine != null) StopCoroutine(slowCoroutine);
+        slowCoroutine = StartCoroutine(SlowRoutine(multiplier, duration));
+
+    }
+
+    IEnumerator SlowRoutine(float multiplier, float duration)
+    {
+        agent.speed = baseMoveSpeed * multiplier;
+        animator.speed = multiplier; // Adjust animation speed to match the slow effect
+        yield return new WaitForSeconds(duration);
+        agent.speed = baseMoveSpeed;
+        animator.speed = 1f; // Reset animation speed to normal
+        slowCoroutine = null;
     }
 
     IEnumerator Flash(float duration)
@@ -127,12 +156,11 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(data.enemyName + other.name + " hit the boundary line and dealt " + data.damage + " damage.");
         if (other.CompareTag("BoundaryLine"))
         {
             BoundaryLine.Instance.TakeDamage(data.damage);
-            // Debug.Log(data.enemyName + " hit the boundary line and dealt " + data.damage + " damage.");
-            Die(); // Enemy dies after hitting the boundary line
+            Debug.Log("Enemy Killed by Boundary Line!");
+            TakeDamage(currentHealth, DamageSource.Boundary); // Enemy dies after hitting the boundary line
         }
     }
 }

@@ -5,6 +5,22 @@ public class PlayerAnimation : MonoBehaviour
     private Animator animator;
 
     [SerializeField] private player playerScript;
+    [SerializeField] ElementalCaster elementalCaster;
+
+    void OnEnable()
+    {
+        elementalCaster.OnCastStarted += PlayCastAnim;
+    }
+    void OnDisable()
+    {
+        elementalCaster.OnCastStarted -= PlayCastAnim;
+    }
+
+    void PlayCastAnim()
+    {
+        animator.ResetTrigger("CastAnim");
+        animator.SetTrigger("CastAnim");
+    }
 
     private void Awake()
     {
@@ -17,8 +33,4 @@ public class PlayerAnimation : MonoBehaviour
         animator.SetBool("IsMoving", playerScript.GetIsMoving());
     }
 
-    // public void Attack()
-    // {
-    //     animator.SetTrigger("Attack");
-    // }
 }

@@ -39,6 +39,8 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy(WaveData wave)
     {
+        Debug.Log("Wave started, total : " + wave.totalEnemyCount + " enemies.");
+        Debug.Log("Spawning enemy from wave: " + currentWave);
         Vector3 spawnPos = GetRandomSpawnPosition();
         GameObject portal = Instantiate(portalvfx, portalSpawnPoint.position, Quaternion.identity);
         Destroy(portal, 2f); // Destroy the portal effect after 2 seconds

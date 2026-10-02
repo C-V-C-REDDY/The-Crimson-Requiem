@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: WaveData
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
   waveNumber: 1
-  totalEnemyCount: 10
+  totalEnemyCount: 15
   spawnInterval: 1.5
   enemyPool:
   - enemyPrefab: {fileID: 6593031064096334802, guid: ac76ef002be76b14c8c23826e87cc47a, type: 3}
-    spawnWeight: 6
+    spawnWeight: 3
   - enemyPrefab: {fileID: 1937041451794641023, guid: 40b39e25036a03644a63dc66f2ef267f, type: 3}
     spawnWeight: 2
   - enemyPrefab: {fileID: 8395119973179290418, guid: 4e81891a44719834d8ff5a21b2633e38, type: 3}
-    spawnWeight: 5
+    spawnWeight: 6

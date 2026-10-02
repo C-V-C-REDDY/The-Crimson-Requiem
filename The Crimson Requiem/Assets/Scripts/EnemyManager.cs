@@ -4,7 +4,7 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager Instance {get; private set;}
 
-    private List<Enemy> activeEnemies = new List<Enemy>();
+    public List<Enemy> activeEnemies = new List<Enemy>();
     private bool waveFullySpawned = false;
 
     void Awake()
