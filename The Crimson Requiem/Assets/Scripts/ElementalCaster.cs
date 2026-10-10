@@ -11,6 +11,7 @@ public class ElementalCaster : MonoBehaviour
     [SerializeField] WaterSpellData waterData;
     [SerializeField] WindSpellData windData;
     [SerializeField] IceSpellData iceData;
+    [SerializeField] LightningSpellData lightningData;
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
@@ -36,6 +37,7 @@ public class ElementalCaster : MonoBehaviour
             }
         }
         if(Input.GetKeyDown(KeyCode.Alpha3)) TryCastIce();
+        if(Input.GetKeyDown(KeyCode.Alpha4)) TryCastLightning();
     }
 
     void TryCastWater()
@@ -66,13 +68,14 @@ public class ElementalCaster : MonoBehaviour
         isCasting = false;
     }
 
-    IEnumerator TintRoutine(Color color, float fade, float hold)
+    IEnumerator TintRoutine(Color color, float fadeIn, float hold, float fadeOut)
     {
         colorAdj.colorFilter.overrideState = true;
-        yield return FadeTint(Color.white, color, fade);
+        yield return FadeTint(Color.white, color, fadeIn);
         yield return new WaitForSeconds(hold);
-        yield return FadeTint(color, Color.white, fade);
+        yield return FadeTint(color, Color.white, fadeOut);
     }
+    IEnumerator TintRoutine(Color color, float fade, float hold) => TintRoutine(color, fade, hold, fade);
 
     IEnumerator FadeTint(Color from, Color to, float time)
     {
@@ -110,7 +113,7 @@ public class ElementalCaster : MonoBehaviour
 
         GameObject vfx = Instantiate(data.iceVFXPrefab, data.vfxPosition, Quaternion.identity);
         Destroy(vfx, data.vfxLifetime + 0.5f);
-        JuiceManager.Instance.ScreenShake(data.shakeforce);
+        JuiceManager.Instance.ScreenShake(data.shakeforce, 0.1f);
 
         yield return new WaitForSeconds(data.impactDelay);
         // JuiceManager.Instance.Hitstop(0.1f);
@@ -119,9 +122,51 @@ public class ElementalCaster : MonoBehaviour
         {
             if(e != null) e.ApplySlow(0f, data.freezeDuration);
         }
-        yield return StartCoroutine(TintRoutine(data.tintColor, data.tintFadeDuration, data.tintDuration));
+        yield return StartCoroutine(TintRoutine(data.tintColor, data.tintFadeDuration, data.tintDuration, data.tintFadeDuration));
         isCasting = false;
     }
+
+    void TryCastLightning()
+    {
+        if(isCasting) return;
+        if(!SpellEconomy.Instance.TryCastElemental()) return;
+        OnCastStarted?.Invoke();
+        StartCoroutine(CastLightning(lightningData));
+    }
+
+    IEnumerator CastLightning(LightningSpellData d)
+    {
+        isCasting = true;
+        colorAdj.colorFilter.overrideState = true;
+
+        yield return FadeTint(Color.white, d.dimColor, d.telegraphTime);
+        JuiceManager.Instance.ScreenShake(d.shakeForce, d.shakeDuration);
+        JuiceManager.Instance.Hitstop(d.hitStopTime);
+        // Coroutine tint = StartCoroutine(TintRoutine(d.tintColor, d.tintFadeIn, d.tintHold, d.tintFadeOut));
+        
+        foreach(var enemy in new List<Enemy>(EnemyManager.Instance.activeEnemies))
+           if(enemy != null) StartCoroutine(StrikeEnemy(enemy, d));
+        
+        yield return FadeTint(d.dimColor, d.tintColor, d.tintFadeIn);
+        yield return new WaitForSeconds(d.tintHold);
+        yield return FadeTint(d.tintColor, Color.white, d.tintFadeOut);
+        isCasting = false;
+    }
+
+    IEnumerator StrikeEnemy(Enemy e, LightningSpellData d)
+    {
+        yield return new WaitForSeconds(Random.Range(0f, d.maxStrikeStagger));
+        if(e == null) yield break;
+
+        GameObject strikeEffect = Instantiate(d.strikeVfxPrefab, e.transform.position, Quaternion.identity);
+        JuiceManager.Instance.ScreenShake(d.strikeShake, 0.25f);
+        Destroy(strikeEffect, d.shockDuration + 0.5f);
+        e.ApplyShock(d.shakeDuration, d.shockMagnitute);
+        yield return new WaitForSeconds(d.deathDelay);
+        if(e == null) yield break;
+        e.TakeDamage(d.damage, Enemy.DamageSource.PlayerSpell);
+    }
+
 
     
 }

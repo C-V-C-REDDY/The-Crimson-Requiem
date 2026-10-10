@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
     private MaterialPropertyBlock propertyBlock;
     [SerializeField] private float hitStopDuration = 0.1f; // Duration of hitstop in seconds
     [SerializeField] private float screenShakeForce = 0.1f; // Force of screen shake
+    [SerializeField] Transform visual;
     public enum DamageSource {PlayerSpell, Boundary}
     private Coroutine slowCoroutine;
     private bool isCaught = false;
@@ -91,7 +92,7 @@ public class Enemy : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, data.maxHealth);
         healthBar.value = currentHealth;
         JuiceManager.Instance.Hitstop(hitStopDuration);
-        JuiceManager.Instance.ScreenShake(screenShakeForce);
+        JuiceManager.Instance.ScreenShake(screenShakeForce, 0.1f);
 
         if (currentHealth <= 0f)
         {
@@ -203,15 +204,24 @@ public class Enemy : MonoBehaviour
         isCaught = false;
     }
 
-    // IEnumerator Flash(float duration)
-    // {
-    //     meshRenderer.GetPropertyBlock(propertyBlock);
-    //     propertyBlock.SetColor("_Color", Color.black);
-    //     meshRenderer.SetPropertyBlock(propertyBlock);
-    //     yield return new WaitForSeconds(duration);
-    //     propertyBlock.SetColor("_Color", originalColor);
-    //     meshRenderer.SetPropertyBlock(propertyBlock);
-    // }
+    public void ApplyShock(float duration, float magnitude)
+    {
+        ApplySlow(0f, duration);
+        StartCoroutine(ShockShake(duration, magnitude));
+    }
+
+    IEnumerator ShockShake(float duration, float magnitude)
+    {
+        Vector3 basePos = visual.localPosition;
+        for(float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            if(visual == null) yield break; // Exit if the visual is destroyed
+            float fade = 1f - t / duration;
+            visual.localPosition = basePos + Random.insideUnitSphere * magnitude * fade;
+            yield return null;
+        }
+        if(visual != null) visual.localPosition = basePos; // Reset position if the visual still exists
+    }
 
     void OnTriggerEnter(Collider other)
     {

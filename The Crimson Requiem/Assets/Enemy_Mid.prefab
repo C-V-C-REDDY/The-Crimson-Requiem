@@ -235,6 +235,7 @@ MonoBehaviour:
   healthBar: {fileID: 4958725653276922449}
   hitStopDuration: 0.05
   screenShakeForce: 0.2
+  visual: {fileID: 1472436655798142533}
 --- !u!95 &2735286555124760616
 Animator:
   serializedVersion: 7

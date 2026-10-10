@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a11ba52184f5646bd245cd03c68857, type: 3}
   m_Name: IceSpellData
   m_EditorClassIdentifier: Assembly-CSharp::IceSpellData
-  spellName: 
-  tier: 0
+  spellName: Ice
+  tier: 1
   staffCastAnim: {fileID: 0}
-  iceVFXPrefab: {fileID: 0}
+  iceVFXPrefab: {fileID: 584207449403360073, guid: b1ae5055f08b8284d9e996465d1d37e3, type: 3}
   vfxPosition: {x: 5, y: 0, z: 30}
   vfxLifetime: 1.5
   impactDelay: 0.4
-  freezeDuration: 3
+  freezeDuration: 5
   tintColor: {r: 0.75, g: 0.9, b: 1, a: 1}
-  tintDuration: 4
+  tintDuration: 5
   tintFadeDuration: 1
+  shakeforce: 1.5

@@ -25,9 +25,15 @@ public class JuiceManager : MonoBehaviour
         Time.timeScale = 1f;
     }
 
-    public void ScreenShake(float force)
+    public void ScreenShake(float force, float duration)
     {
-        impulseSource.GenerateImpulse(force);
+        StartCoroutine(ShakeRoutine(force, duration));
+    }
+    IEnumerator ShakeRoutine(float force, float duration)
+    {
+        impulseSource.ImpulseDefinition.ImpulseDuration = duration;
+        impulseSource.GenerateImpulseWithForce(force);
+        yield break;
     }
 
 }
