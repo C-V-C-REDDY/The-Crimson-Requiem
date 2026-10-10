@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44a11ba52184f5646bd245cd03c68857, type: 3}
+  m_Name: IceSpellData
+  m_EditorClassIdentifier: Assembly-CSharp::IceSpellData
+  spellName: 
+  tier: 0
+  staffCastAnim: {fileID: 0}
+  iceVFXPrefab: {fileID: 0}
+  vfxPosition: {x: 5, y: 0, z: 30}
+  vfxLifetime: 1.5
+  impactDelay: 0.4
+  freezeDuration: 3
+  tintColor: {r: 0.75, g: 0.9, b: 1, a: 1}
+  tintDuration: 4
+  tintFadeDuration: 1

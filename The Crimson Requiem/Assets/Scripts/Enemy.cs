@@ -101,7 +101,7 @@ public class Enemy : MonoBehaviour
         {
 
             animator.SetTrigger("Hit");
-            StartCoroutine(Flash(0.08f)); // Flash for 0.08 seconds
+            // StartCoroutine(Flash(0.08f)); // Flash for 0.08 seconds
  // Screen shake with a force of 0.1f
         }
     }
@@ -203,15 +203,15 @@ public class Enemy : MonoBehaviour
         isCaught = false;
     }
 
-    IEnumerator Flash(float duration)
-    {
-        meshRenderer.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetColor("_Color", Color.black);
-        meshRenderer.SetPropertyBlock(propertyBlock);
-        yield return new WaitForSeconds(duration);
-        propertyBlock.SetColor("_Color", originalColor);
-        meshRenderer.SetPropertyBlock(propertyBlock);
-    }
+    // IEnumerator Flash(float duration)
+    // {
+    //     meshRenderer.GetPropertyBlock(propertyBlock);
+    //     propertyBlock.SetColor("_Color", Color.black);
+    //     meshRenderer.SetPropertyBlock(propertyBlock);
+    //     yield return new WaitForSeconds(duration);
+    //     propertyBlock.SetColor("_Color", originalColor);
+    //     meshRenderer.SetPropertyBlock(propertyBlock);
+    // }
 
     void OnTriggerEnter(Collider other)
     {

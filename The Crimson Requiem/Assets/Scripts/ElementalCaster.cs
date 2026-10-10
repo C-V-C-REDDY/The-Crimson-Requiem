@@ -10,6 +10,7 @@ public class ElementalCaster : MonoBehaviour
 
     [SerializeField] WaterSpellData waterData;
     [SerializeField] WindSpellData windData;
+    [SerializeField] IceSpellData iceData;
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
@@ -34,6 +35,7 @@ public class ElementalCaster : MonoBehaviour
                 StartCoroutine(CastWind(windData));
             }
         }
+        if(Input.GetKeyDown(KeyCode.Alpha3)) TryCastIce();
     }
 
     void TryCastWater()
@@ -55,7 +57,7 @@ public class ElementalCaster : MonoBehaviour
         foreach (var enemy in new List<Enemy>(EnemyManager.Instance.activeEnemies))
             if (enemy != null) enemy.ApplySlow(d.slowMlutiplier, d.slowDuration);
         
-        Coroutine tint = StartCoroutine(TintRoutine(d));
+        Coroutine tint = StartCoroutine(TintRoutine(d.tintColor, d.tintFadeDuration, d.tintDuration));
 
         yield return new WaitForSeconds(d.fogDuration * 0.5f);
         Destroy(fog);
@@ -64,12 +66,12 @@ public class ElementalCaster : MonoBehaviour
         isCasting = false;
     }
 
-    IEnumerator TintRoutine(WaterSpellData d)
+    IEnumerator TintRoutine(Color color, float fade, float hold)
     {
         colorAdj.colorFilter.overrideState = true;
-        yield return FadeTint(Color.white, d.tintColor, d.tintFadeDuration);
-        yield return new WaitForSeconds(d.tintDuration);
-        yield return FadeTint(d.tintColor, Color.white, d.tintFadeDuration);
+        yield return FadeTint(Color.white, color, fade);
+        yield return new WaitForSeconds(hold);
+        yield return FadeTint(color, Color.white, fade);
     }
 
     IEnumerator FadeTint(Color from, Color to, float time)
@@ -92,6 +94,33 @@ public class ElementalCaster : MonoBehaviour
         }
         yield return new WaitForSeconds(data.pullInDuration + data.orbitDuration);
         Destroy(tornado);
+    }
+
+    void TryCastIce()
+    {
+        if(isCasting) return;
+        if(!SpellEconomy.Instance.TryCastElemental()) return;
+        OnCastStarted?.Invoke();
+        StartCoroutine(CastIce(iceData));
+    }
+
+    IEnumerator CastIce(IceSpellData data)
+    {
+        isCasting = true;
+
+        GameObject vfx = Instantiate(data.iceVFXPrefab, data.vfxPosition, Quaternion.identity);
+        Destroy(vfx, data.vfxLifetime + 0.5f);
+        JuiceManager.Instance.ScreenShake(data.shakeforce);
+
+        yield return new WaitForSeconds(data.impactDelay);
+        // JuiceManager.Instance.Hitstop(0.1f);
+
+        foreach(Enemy e in new List<Enemy>(EnemyManager.Instance.activeEnemies))
+        {
+            if(e != null) e.ApplySlow(0f, data.freezeDuration);
+        }
+        yield return StartCoroutine(TintRoutine(data.tintColor, data.tintFadeDuration, data.tintDuration));
+        isCasting = false;
     }
 
     
