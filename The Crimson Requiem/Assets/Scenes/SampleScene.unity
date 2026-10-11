@@ -404,6 +404,8 @@ MonoBehaviour:
   windData: {fileID: 11400000, guid: 20f04a75a406ff34d9aa82d42c1487ad, type: 2}
   iceData: {fileID: 11400000, guid: 40bf099359dfbee49a033092f53d40a6, type: 2}
   lightningData: {fileID: 11400000, guid: a991abfb81aa06946be6c4b2c19a8d66, type: 2}
+  fireSpellData: {fileID: 11400000, guid: fb83af6a7e3c8714984b6bce1c52a252, type: 2}
+  earthSpellData: {fileID: 11400000, guid: 0e44860a2af2ffd4fb134bb68d8f7f59, type: 2}
   globalVolume: {fileID: 832575518}
 --- !u!1 &330585543
 GameObject:

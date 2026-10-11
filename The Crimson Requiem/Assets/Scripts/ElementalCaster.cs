@@ -13,6 +13,7 @@ public class ElementalCaster : MonoBehaviour
     [SerializeField] IceSpellData iceData;
     [SerializeField] LightningSpellData lightningData;
     [SerializeField] FireSpellData fireSpellData;
+    [SerializeField] EarthSpellData earthSpellData;
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
@@ -40,6 +41,7 @@ public class ElementalCaster : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha3)) TryCastIce();
         if(Input.GetKeyDown(KeyCode.Alpha4)) TryCastLightning();
         if(Input.GetKeyDown(KeyCode.Alpha5)) TryCastFire();
+        if(Input.GetKeyDown(KeyCode.Alpha6)) TryCastEarth();
     }
 
     void TryCastWater()
@@ -179,6 +181,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastFire(FireSpellData fire)
     {
+        JuiceManager.Instance.ScreenShake(0.5f,0.5f);
         var enemies = new List<Enemy>(EnemyManager.Instance.activeEnemies);
         float perTick = fire.totalDamage / (fire.burnDuration / fire.tickInterval);
 
@@ -189,6 +192,26 @@ public class ElementalCaster : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(0f, 0.05f));
         }
         yield return new WaitForSeconds(fire.burnDuration);
+    }
+    void TryCastEarth()
+    {
+        if(isCasting) return;
+        if(!SpellEconomy.Instance.TryCastElemental()) return;
+        OnCastStarted?.Invoke();
+        StartCoroutine(CastEarth(earthSpellData));
+    }
+
+    IEnumerator CastEarth(EarthSpellData earth)
+    {
+        JuiceManager.Instance.ScreenShake(0.5f,0.5f);
+        var enemies = new List<Enemy>(EnemyManager.Instance.activeEnemies);
+        foreach(var e in enemies)
+        {
+            if(e == null) continue;
+            e.ApplyArmorBreak(earth.damageMultiplier, earth.duration, earth.vortexPrefab);
+            yield return new WaitForSeconds(Random.Range(0f,0.05f));
+        }
+        yield return new WaitForSeconds(earth.duration);
     }
 
 

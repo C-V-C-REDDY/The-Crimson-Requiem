@@ -25,7 +25,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float hitStopDuration = 0.1f; // Duration of hitstop in seconds
     [SerializeField] private float screenShakeForce = 0.1f; // Force of screen shake
     [SerializeField] Transform visual;
-    public enum DamageSource {PlayerSpell, Boundary}
+    public enum DamageSource {PlayerSpell, Boundary, ElementalSpell}
     private Coroutine slowCoroutine;
     private bool isCaught = false;
 
@@ -87,12 +87,15 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float amount, DamageSource source)
     {
-
-        currentHealth -= amount;
+        float damage = amount * damageTakenMultiplier;
+        currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, data.maxHealth);
         healthBar.value = currentHealth;
-        JuiceManager.Instance.Hitstop(hitStopDuration);
-        JuiceManager.Instance.ScreenShake(screenShakeForce, 0.1f);
+        if (source != DamageSource.ElementalSpell)
+        {
+            JuiceManager.Instance.Hitstop(hitStopDuration);
+            JuiceManager.Instance.ScreenShake(screenShakeForce, 0.1f);
+        }
 
         if (currentHealth <= 0f)
         {
@@ -247,7 +250,7 @@ public class Enemy : MonoBehaviour
         {
             yield return new WaitForSeconds(tickInterval);
             elapsed += tickInterval;
-            TakeDamage(damagePerTick, DamageSource.PlayerSpell);
+            TakeDamage(damagePerTick, DamageSource.ElementalSpell);
         }
         StopBurn();
     }
@@ -262,6 +265,35 @@ public class Enemy : MonoBehaviour
             Destroy(burnVFX, 2f);
             burnVFX = null;
         }
+    }
+
+    float damageTakenMultiplier = 1f;
+    Coroutine armorBreakRoutine;
+    GameObject armorBreakVFX;
+
+    public void ApplyArmorBreak(float multiplier, float duration, GameObject vortexPrefab)
+    {
+        if(armorBreakRoutine != null) StopCoroutine(armorBreakRoutine);
+        else if(vortexPrefab != null)
+        {
+            armorBreakVFX = Instantiate(vortexPrefab, transform);
+            armorBreakVFX.transform.localPosition = Vector3.zero;
+        }
+        damageTakenMultiplier = multiplier;
+        armorBreakRoutine = StartCoroutine(ArmorBreakRoutine(duration));
+    }
+
+    IEnumerator ArmorBreakRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        ClearArmorBreak();
+    }
+
+    void ClearArmorBreak()
+    {
+        damageTakenMultiplier = 1f;
+        armorBreakRoutine = null;
+        if(armorBreakVFX != null) { Destroy(armorBreakVFX); armorBreakVFX = null; }
     }
 
     void OnTriggerEnter(Collider other)
