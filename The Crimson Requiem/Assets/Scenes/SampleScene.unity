@@ -158,7 +158,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    ImpulseDuration: 0.2
+    ImpulseDuration: 0.1
     ImpulseType: 0
     DissipationRate: 0.25
     RawSignal: {fileID: 0}
@@ -403,6 +403,7 @@ MonoBehaviour:
   waterData: {fileID: 11400000, guid: df71afbc6cab8e04ebec94e5015fc3da, type: 2}
   windData: {fileID: 11400000, guid: 20f04a75a406ff34d9aa82d42c1487ad, type: 2}
   iceData: {fileID: 11400000, guid: 40bf099359dfbee49a033092f53d40a6, type: 2}
+  lightningData: {fileID: 11400000, guid: a991abfb81aa06946be6c4b2c19a8d66, type: 2}
   globalVolume: {fileID: 832575518}
 --- !u!1 &330585543
 GameObject:

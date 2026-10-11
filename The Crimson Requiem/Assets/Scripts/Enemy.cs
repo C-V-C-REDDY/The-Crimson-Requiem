@@ -114,6 +114,7 @@ public class Enemy : MonoBehaviour
             SpellEconomy.Instance.OnPlayerKill();
             Debug.Log("Killed by PlayerSpell!");
         }
+        StopBurn();
         animator.speed = 1f; // Reset animation speed to normal
         animator.SetTrigger("Die");
         isDead = true;
@@ -221,6 +222,46 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
         if(visual != null) visual.localPosition = basePos; // Reset position if the visual still exists
+    }
+
+    Coroutine burnRoutine;
+    GameObject burnVFX;
+
+    public void ApplyBurn(float damagePerTick, float tickInterval, float duration, GameObject vfxPrefab)
+    {
+        if (burnRoutine != null)
+           StopCoroutine(burnRoutine);
+        else if (vfxPrefab != null)
+        {
+            burnVFX = Instantiate(vfxPrefab, transform);
+            burnVFX.transform.localPosition = Vector3.zero;
+        }
+        burnRoutine = StartCoroutine(BurnRoutine(damagePerTick, tickInterval, duration));
+        
+    }
+
+    IEnumerator BurnRoutine(float damagePerTick, float tickInterval, float duration)
+    {
+        float elapsed = 0f;
+        while(elapsed < duration)
+        {
+            yield return new WaitForSeconds(tickInterval);
+            elapsed += tickInterval;
+            TakeDamage(damagePerTick, DamageSource.PlayerSpell);
+        }
+        StopBurn();
+    }
+
+    void StopBurn()
+    {
+        if(burnRoutine != null) {StopCoroutine(burnRoutine); burnRoutine = null; }
+        if (burnVFX != null)
+        {
+            var ps = burnVFX.GetComponent<ParticleSystem>();
+            if(ps != null) ps.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            Destroy(burnVFX, 2f);
+            burnVFX = null;
+        }
     }
 
     void OnTriggerEnter(Collider other)

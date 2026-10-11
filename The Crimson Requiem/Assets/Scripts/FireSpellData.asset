@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd1adbc5d7202d14b82de7d83c292f38, type: 3}
+  m_Name: FireSpellData
+  m_EditorClassIdentifier: Assembly-CSharp::FireSpellData
+  spellName: Fire
+  tier: 0
+  staffCastAnim: {fileID: 0}
+  fireVFXPrefab: {fileID: 5732395973861791349, guid: 675c8b17ff7188c438e42f2e37f278ed, type: 3}
+  totalDamage: 30
+  burnDuration: 5
+  tickInterval: 0.5

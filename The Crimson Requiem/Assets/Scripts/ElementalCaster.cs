@@ -12,6 +12,7 @@ public class ElementalCaster : MonoBehaviour
     [SerializeField] WindSpellData windData;
     [SerializeField] IceSpellData iceData;
     [SerializeField] LightningSpellData lightningData;
+    [SerializeField] FireSpellData fireSpellData;
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
@@ -38,6 +39,7 @@ public class ElementalCaster : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Alpha3)) TryCastIce();
         if(Input.GetKeyDown(KeyCode.Alpha4)) TryCastLightning();
+        if(Input.GetKeyDown(KeyCode.Alpha5)) TryCastFire();
     }
 
     void TryCastWater()
@@ -165,6 +167,28 @@ public class ElementalCaster : MonoBehaviour
         yield return new WaitForSeconds(d.deathDelay);
         if(e == null) yield break;
         e.TakeDamage(d.damage, Enemy.DamageSource.PlayerSpell);
+    }
+
+    void TryCastFire()
+    {
+        if(isCasting) return;
+        if(!SpellEconomy.Instance.TryCastElemental()) return;
+        OnCastStarted?.Invoke();
+        StartCoroutine(CastFire(fireSpellData));
+    }
+
+    IEnumerator CastFire(FireSpellData fire)
+    {
+        var enemies = new List<Enemy>(EnemyManager.Instance.activeEnemies);
+        float perTick = fire.totalDamage / (fire.burnDuration / fire.tickInterval);
+
+        foreach (var e in enemies)
+        {
+            if(e == null) continue;
+            e.ApplyBurn(perTick, fire.tickInterval, fire.burnDuration, fire.fireVFXPrefab);
+            yield return new WaitForSeconds(Random.Range(0f, 0.05f));
+        }
+        yield return new WaitForSeconds(fire.burnDuration);
     }
 
 
