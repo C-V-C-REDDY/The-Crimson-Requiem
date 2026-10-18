@@ -43,6 +43,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void ApplySlow(float slow)
+    {
+        Debug.Log("Slow Applied!");
+    }
+
     void Die()
     {
         // Handle player death (e.g., reload scene, show game over screen)
