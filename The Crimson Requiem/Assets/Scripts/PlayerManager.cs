@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using Unity.Collections;
+using System.Collections;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Health")]
     public float maxHealth = 100f;
     public float currentHealth;
+    public static float speedMultiplier = 1f;
 
     public event Action<float, float> OnHealthChanged;
 
@@ -43,10 +46,20 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void ApplySlow(float slow)
+    public void ApplySlow(float slow, float duration)
     {
-        Debug.Log("Slow Applied!");
+        Debug.Log("Applying slow!");
+        // StartCoroutine(SlowRoutine(slow, duration));
     }
+
+    // IEnumerator SlowRoutine(float slowMultiplier, float duration)
+    // {
+    //     Debug.Log("SlowApplied on player!");
+    //     speedMultiplier = slowMultiplier;
+    //     yield return new WaitForSeconds(duration);
+    //     Debug.Log("Slow_Completed!");
+    //     speedMultiplier = 1f;
+    // }
 
     void Die()
     {

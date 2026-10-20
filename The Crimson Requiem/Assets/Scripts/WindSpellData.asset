@@ -23,7 +23,7 @@ MonoBehaviour:
   orbitDuration: 5
   orbitSpeed: 270
   orbitRadius: 3
-  liftHeight: 3
+  liftHeight: 2
   flingDistance: 15
   flingDuration: 0.5
   flingSpeed: 15

@@ -55,7 +55,6 @@ public class HazardZone : MonoBehaviour
                     e.TakeDamage(data.damage, Enemy.DamageSource.PlayerSpell);
                     break;
                 case HazardEffect.Slow:
-                    if (data.damage > 0f) e.TakeDamage(data.damage, Enemy.DamageSource.PlayerSpell);
                     e.ApplySlow(data.slowFactor, data.tickInterval * 1.5f);
                     break;
             }
@@ -69,7 +68,7 @@ public class HazardZone : MonoBehaviour
                     p.TakeDamage(data.damage);
                     break;
                 case HazardEffect.Slow:
-                   p.ApplySlow(data.slowFactor);
+                   p.ApplySlow(data.slowFactor, data.tickInterval * 1.5f);
                    break;
             }
         }

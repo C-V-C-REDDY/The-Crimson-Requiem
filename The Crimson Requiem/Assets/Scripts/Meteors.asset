@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64cc13395dde8154293c43fa54dfa37e, type: 3}
   m_Name: Meteors
   m_EditorClassIdentifier: Assembly-CSharp::HazardData
-  effect: 1
+  effect: 0
   zonePrefab: {fileID: 7957833072274404953, guid: 3355f6bfa6db8b24281b827de929694c, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 136
-  radius: 20
+  radius: 10
   activeDuaration: 2.5
   tickInterval: 0.5
-  damage: 2
-  slowFactor: 0.5
+  damage: 10
+  slowFactor: 0
   affectsPlayer: 1
   affectsEnemies: 1

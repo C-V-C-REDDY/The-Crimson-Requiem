@@ -17,5 +17,5 @@ MonoBehaviour:
   staffCastAnim: {fileID: 0}
   dustPuffPrefab: {fileID: 5610010966355794069, guid: 803ecf87f61d9fb4f84ba6319ba95c9c, type: 3}
   vortexPrefab: {fileID: 6526302276393259002, guid: f9d9793366789ae48a7e1b0692763acc, type: 3}
-  damageMultiplier: 1.5
+  damageMultiplier: 2
   duration: 6

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: LargeEnemy
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Large
-  maxHealth: 20
-  moveSpeed: 5
+  maxHealth: 25
+  moveSpeed: 3
   damage: 20
   attackRange: 2
   attackCooldown: 2.5

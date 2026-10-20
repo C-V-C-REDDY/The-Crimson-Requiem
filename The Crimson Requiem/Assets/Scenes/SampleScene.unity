@@ -402,8 +402,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 1c4d63e44d76cbd43b115dec2d81d3cf, type: 2}
   - {fileID: 11400000, guid: 7d0e4e5c455a3a243b8d0bd40cc96c7a, type: 2}
   smokePrefab: {fileID: 4318940320840401929, guid: 842eb98046e1ca348b3c0807fcfe362d, type: 3}
-  warningTime: 5
-  gapRange: {x: 5, y: 10}
+  warningTime: 3
+  gapRange: {x: 10, y: 15}
 --- !u!4 &244021654
 Transform:
   m_ObjectHideFlags: 0
@@ -1698,9 +1698,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d68e68430a1b6d249aa31d66ec34a850, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellEconomy
-  killsPerCharge: 2
+  killsPerCharge: 5
   maxCharges: 3
-  elementalGlobalCooldown: 15
+  elementalGlobalCooldown: 10
 --- !u!4 &1234231524
 Transform:
   m_ObjectHideFlags: 0
@@ -2500,6 +2500,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: eda03d97bb04f6f48984a93b6ababbac, type: 2}
   - {fileID: 11400000, guid: 1f1d1af8369097843bab26b3be5dc5fd, type: 2}
   - {fileID: 11400000, guid: 2287bf57d692b4e4b82ddfa65d6f2fa5, type: 2}
+  - {fileID: 11400000, guid: 909fbdfd550746141a99a7d994f0419f, type: 2}
+  - {fileID: 11400000, guid: 07fbd4798aabfdc4aac1b34d0012ebc6, type: 2}
 --- !u!4 &1827122372
 Transform:
   m_ObjectHideFlags: 0

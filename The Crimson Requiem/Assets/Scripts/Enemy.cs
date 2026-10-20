@@ -19,9 +19,9 @@ public class Enemy : MonoBehaviour
     private float currentHealth;
     private float lastAttackTime;
     private float baseMoveSpeed;
+    public GameObject slowVfx;
     private SkinnedMeshRenderer meshRenderer;
-    private Color originalColor;
-    private MaterialPropertyBlock propertyBlock;
+
     [SerializeField] private float hitStopDuration = 0.1f; // Duration of hitstop in seconds
     [SerializeField] private float screenShakeForce = 0.1f; // Force of screen shake
     [SerializeField] Transform visual;
@@ -39,8 +39,7 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-        originalColor = meshRenderer.material.color;
-        propertyBlock = new MaterialPropertyBlock();
+
     }
     
     void Start()
@@ -144,9 +143,12 @@ public class Enemy : MonoBehaviour
 
     IEnumerator SlowRoutine(float multiplier, float duration)
     {
+        // GameObject vfx = Instantiate(slowVfx, transform);
+        // vfx.transform.localPosition = Vector3.zero;
         agent.speed = baseMoveSpeed * multiplier;
         animator.speed = multiplier; // Adjust animation speed to match the slow effect
         yield return new WaitForSeconds(duration);
+        // Destroy(vfx,2f);
         agent.speed = baseMoveSpeed;
         animator.speed = 1f; // Reset animation speed to normal
         slowCoroutine = null;

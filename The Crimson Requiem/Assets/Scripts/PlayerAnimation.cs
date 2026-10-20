@@ -31,6 +31,7 @@ public class PlayerAnimation : MonoBehaviour
     private void Update()
     {
         animator.SetBool("IsMoving", playerScript.GetIsMoving());
+        animator.speed = PlayerManager.speedMultiplier;
     }
 
 }

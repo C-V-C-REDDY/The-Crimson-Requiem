@@ -16,6 +16,6 @@ MonoBehaviour:
   tier: 0
   staffCastAnim: {fileID: 0}
   fireVFXPrefab: {fileID: 5732395973861791349, guid: 675c8b17ff7188c438e42f2e37f278ed, type: 3}
-  totalDamage: 30
+  totalDamage: 15
   burnDuration: 5
   tickInterval: 0.5

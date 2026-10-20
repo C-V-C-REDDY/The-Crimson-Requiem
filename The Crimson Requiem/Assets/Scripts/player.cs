@@ -8,6 +8,7 @@ public class player : MonoBehaviour
 
     private bool IsMoving;
 
+
     private void Update()
     {
         Vector2 inputVector = new Vector2(0,0);
