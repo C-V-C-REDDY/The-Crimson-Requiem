@@ -17,12 +17,12 @@ MonoBehaviour:
   spawnInterval: 1.5
   enemyPool:
   - enemyPrefab: {fileID: 6593031064096334802, guid: ac76ef002be76b14c8c23826e87cc47a, type: 3}
-    spawnWeight: 15
+    spawnWeight: 20
   - enemyPrefab: {fileID: 1937041451794641023, guid: 40b39e25036a03644a63dc66f2ef267f, type: 3}
     spawnWeight: 20
   - enemyPrefab: {fileID: 8395119973179290418, guid: 4e81891a44719834d8ff5a21b2633e38, type: 3}
     spawnWeight: 15
   - enemyPrefab: {fileID: 2280705620381782817, guid: 0239f6bc8db775d4099358628e164b54, type: 3}
-    spawnWeight: 25
+    spawnWeight: 20
   - enemyPrefab: {fileID: 1544513596434395835, guid: 50ba2804ea884a14aa0f5bfec92ca368, type: 3}
     spawnWeight: 25

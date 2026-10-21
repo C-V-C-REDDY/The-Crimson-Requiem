@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if(isCaught || isDead) return; // Skip chasing and attacking if caught in tornado or dead
+        if(isCaught || isDead || isDoomed) return; // Skip chasing and attacking if caught in tornado or dead
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (!agent.enabled || !agent.isOnNavMesh) return; // Ensure the agent is enabled and on the NavMesh
          if (distanceToPlayer > data.attackRange)
@@ -296,6 +296,47 @@ public class Enemy : MonoBehaviour
         damageTakenMultiplier = 1f;
         armorBreakRoutine = null;
         if(armorBreakVFX != null) { Destroy(armorBreakVFX); armorBreakVFX = null; }
+    }
+
+    private bool isDoomed;
+    public bool IsDoomed => isDoomed;
+
+    public void GalaxyDoom(float duration, float depth)
+    {
+        if (isDoomed) return;
+        isDoomed = true;
+
+        StopAllCoroutines();
+        StartCoroutine(GalaxyDoomCoroutine(duration, depth));
+    }
+
+    private IEnumerator GalaxyDoomCoroutine(float duration, float depth)
+    {
+        if(agent != null)
+        {
+            agent.isStopped = true;
+            agent.enabled = false;
+        }
+
+        var col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
+        if(animator != null) animator.speed = 0f;
+
+        Vector3 start = transform.position;
+        Vector3 end = start + Vector3.down * depth;
+
+        float t = 0f;
+        while( t < duration)
+        {
+            t += Time.deltaTime;
+            float k = t / duration;
+            k = k * k;
+            transform.position = Vector3.Lerp(start, end, k);
+            yield return null;
+        }
+
+        transform.position = end;
     }
 
     void OnTriggerEnter(Collider other)

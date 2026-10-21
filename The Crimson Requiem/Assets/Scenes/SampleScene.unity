@@ -560,6 +560,7 @@ MonoBehaviour:
   lightningData: {fileID: 11400000, guid: a991abfb81aa06946be6c4b2c19a8d66, type: 2}
   fireSpellData: {fileID: 11400000, guid: fb83af6a7e3c8714984b6bce1c52a252, type: 2}
   earthSpellData: {fileID: 11400000, guid: 0e44860a2af2ffd4fb134bb68d8f7f59, type: 2}
+  galaxyTourData: {fileID: 11400000, guid: 81f5f2ad0a983f54da3405e798623438, type: 2}
   globalVolume: {fileID: 832575518}
 --- !u!1 &330585543
 GameObject:
@@ -2502,6 +2503,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2287bf57d692b4e4b82ddfa65d6f2fa5, type: 2}
   - {fileID: 11400000, guid: 909fbdfd550746141a99a7d994f0419f, type: 2}
   - {fileID: 11400000, guid: 07fbd4798aabfdc4aac1b34d0012ebc6, type: 2}
+  - {fileID: 11400000, guid: b15add3a1d1bbe54aa8f6844b477cf33, type: 2}
+  - {fileID: 11400000, guid: 5def914b81ccd784e9d0fc99e14c1a54, type: 2}
 --- !u!4 &1827122372
 Transform:
   m_ObjectHideFlags: 0

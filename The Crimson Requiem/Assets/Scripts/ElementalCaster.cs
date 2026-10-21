@@ -14,6 +14,7 @@ public class ElementalCaster : MonoBehaviour
     [SerializeField] LightningSpellData lightningData;
     [SerializeField] FireSpellData fireSpellData;
     [SerializeField] EarthSpellData earthSpellData;
+    [SerializeField] GalaxyTourData galaxyTourData;
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
@@ -42,6 +43,7 @@ public class ElementalCaster : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha4)) TryCastLightning();
         if(Input.GetKeyDown(KeyCode.Alpha5)) TryCastFire();
         if(Input.GetKeyDown(KeyCode.Alpha6)) TryCastEarth();
+        if(Input.GetKeyDown(KeyCode.Alpha7)) TryCastGalaxyTour();
     }
 
     void TryCastWater()
@@ -212,6 +214,33 @@ public class ElementalCaster : MonoBehaviour
             yield return new WaitForSeconds(Random.Range(0f,0.05f));
         }
         yield return new WaitForSeconds(earth.duration);
+    }
+
+    void TryCastGalaxyTour()
+    {
+        if(isCasting) return;
+        OnCastStarted?.Invoke();
+        StartCoroutine(CastGalaxyTour(galaxyTourData));
+    }
+
+    IEnumerator CastGalaxyTour(GalaxyTourData data)
+    {
+        isCasting = true;
+
+        var targets = new List<Enemy>(EnemyManager.Instance.activeEnemies);
+        // foreach (var e in targets) e.Freeze();
+
+        foreach(var e in targets)
+        {
+            Instantiate(data.portalPrefab, e.transform.position, Quaternion.identity);
+            e.GalaxyDoom(data.sinkDuration, data.sinkDepth);
+        }
+
+        yield return new WaitForSeconds(data.sinkDuration);
+
+        foreach (var e in targets)
+           e.TakeDamage(data.damage, Enemy.DamageSource.ElementalSpell);
+           JuiceManager.Instance.ScreenShake(0.5f,0.1f);
     }
 
 
