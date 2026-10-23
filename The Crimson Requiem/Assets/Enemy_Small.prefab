@@ -787,10 +787,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.3632032
+  m_Radius: 1.9188552
   m_Height: 4.631912
   m_Direction: 1
-  m_Center: {x: -0.17442417, y: 1.8159561, z: -0.68877935}
+  m_Center: {x: -0.17442417, y: 1.8159561, z: -0.13312721}
 --- !u!137 &1586209965445249391
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0

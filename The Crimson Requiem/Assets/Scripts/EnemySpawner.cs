@@ -6,6 +6,7 @@ public class EnemySpawner : MonoBehaviour
     public static EnemySpawner Instance { get; private set; }
     public Transform portalSpawnPoint;
     public GameObject portalvfx;
+    public static event System.Action OnFloodWaveFullySpawned;
     public WaveData[] waves;
 
     private int currentWave = 0;
@@ -29,12 +30,14 @@ public class EnemySpawner : MonoBehaviour
 
     IEnumerator SpawnWave(WaveData wave)
     {
+        ToastUI.Instance.Show(wave.waveName);
         for (int i = 0; i < wave.totalEnemyCount; i++)
         {
             SpawnEnemy(wave);
             yield return new WaitForSeconds(wave.spawnInterval);
         }
         EnemyManager.Instance.NotifyWaveFullySpawned(true);
+        if (wave.isFloodWave) OnFloodWaveFullySpawned?.Invoke();
     }
 
     void SpawnEnemy(WaveData wave)

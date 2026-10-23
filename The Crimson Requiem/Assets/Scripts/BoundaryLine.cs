@@ -8,6 +8,8 @@ public class BoundaryLine : MonoBehaviour
     public float maxHP = 100f;
     [SerializeField] private float currentHP;
     public bool IsBroken { get; private set; } = false;
+    
+    public event System.Action<float, float> OnBoundaryHPChange;
 
     void Awake()
     {
@@ -25,7 +27,7 @@ public class BoundaryLine : MonoBehaviour
     public void TakeDamage(float amount)
     {
         if (IsBroken) return;
-
+        OnBoundaryHPChange?.Invoke(currentHP,maxHP);
         currentHP -= amount;
         currentHP = Mathf.Clamp(currentHP, 0f, maxHP);
         Debug.Log("Boundary Line took " + amount + " damage. Current HP: " + currentHP);

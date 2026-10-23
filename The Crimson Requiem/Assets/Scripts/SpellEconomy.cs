@@ -5,18 +5,20 @@ public class SpellEconomy : MonoBehaviour
     public static SpellEconomy Instance {get; private set;}
 
     [Header("Charge Economy")]
-    [SerializeField] int killsPerCharge = 2;
-    [SerializeField] int maxCharges = 3;
+    [SerializeField] float killsPerCharge = 2f;
+    [SerializeField] float maxCharges = 3f;
 
     [Header("Cooldown")]
     [SerializeField] float elementalGlobalCooldown = 15f;
 
-    public int CurrentCharges {get; private set;}
+    public float CurrentCharges {get; private set;}
     public int KillCount {get; private set;}
 
     float lastElementalCastTime = -999f;
 
-    public event System.Action<int, int> OnChargeChanges;
+    public event System.Action<float, float> OnChargeChanges;
+
+    public event System.Action<int> OnPlayerKills;
 
     void Awake()
     {
@@ -27,6 +29,7 @@ public class SpellEconomy : MonoBehaviour
     public void OnPlayerKill()
     {
         KillCount++;
+        OnPlayerKills?.Invoke(KillCount);
         Debug.Log("Kill Count: " + KillCount + ", Current Charges: " + CurrentCharges);
         if(KillCount % killsPerCharge == 0 && CurrentCharges < maxCharges)
         {
@@ -45,6 +48,14 @@ public class SpellEconomy : MonoBehaviour
     {
         if (!CanCastElemental()) {
             Debug.Log("Cannot cast elemental spell.");
+            if(Time.time >= lastElementalCastTime + elementalGlobalCooldown)
+            {
+                ToastUI.Instance.Show("Recharging...");
+            }
+            if(CurrentCharges > 0)
+            {
+                ToastUI.Instance.Show("No Charge. Kill More Enemeies!");
+            }
             return false;
         }
 

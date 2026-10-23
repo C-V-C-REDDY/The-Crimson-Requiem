@@ -36,6 +36,7 @@ public class PlayerManager : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        Debug.Log(currentHealth);
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
@@ -49,17 +50,8 @@ public class PlayerManager : MonoBehaviour
     public void ApplySlow(float slow, float duration)
     {
         Debug.Log("Applying slow!");
-        // StartCoroutine(SlowRoutine(slow, duration));
     }
 
-    // IEnumerator SlowRoutine(float slowMultiplier, float duration)
-    // {
-    //     Debug.Log("SlowApplied on player!");
-    //     speedMultiplier = slowMultiplier;
-    //     yield return new WaitForSeconds(duration);
-    //     Debug.Log("Slow_Completed!");
-    //     speedMultiplier = 1f;
-    // }
 
     void Die()
     {

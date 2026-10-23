@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11eb0315b86e38a4d9972f9604ff8e6c, type: 3}
   m_Name: Flood
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  waveName: RAMAPAGE ! ! !
   waveNumber: 7
   totalEnemyCount: 25
   spawnInterval: 0.5
+  isFloodWave: 1
   enemyPool:
   - enemyPrefab: {fileID: 2280705620381782817, guid: 0239f6bc8db775d4099358628e164b54, type: 3}
     spawnWeight: 100

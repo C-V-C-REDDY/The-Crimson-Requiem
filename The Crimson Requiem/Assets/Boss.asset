@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11eb0315b86e38a4d9972f9604ff8e6c, type: 3}
   m_Name: Boss
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  waveName: BOSS INCOMING!!!
   waveNumber: 6
   totalEnemyCount: 1
   spawnInterval: 1
+  isFloodWave: 0
   enemyPool:
   - enemyPrefab: {fileID: 3957972168845915569, guid: 635b257b93e3c9942be20b58152bcef7, type: 3}
     spawnWeight: 100

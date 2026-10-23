@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11eb0315b86e38a4d9972f9604ff8e6c, type: 3}
   m_Name: WaveData4
   m_EditorClassIdentifier: Assembly-CSharp::WaveData
+  waveName: Wave 4
   waveNumber: 4
   totalEnemyCount: 30
   spawnInterval: 1.5
+  isFloodWave: 0
   enemyPool:
   - enemyPrefab: {fileID: 6593031064096334802, guid: ac76ef002be76b14c8c23826e87cc47a, type: 3}
     spawnWeight: 30

@@ -10,9 +10,11 @@ public class WaveData : ScriptableObject
         public float spawnWeight;
     }
 
+    public string waveName;
     public int waveNumber;
     public int totalEnemyCount;
     public float spawnInterval;
+    public bool isFloodWave = false;
     public EnemySpawnEntry[] enemyPool;
     
     }
