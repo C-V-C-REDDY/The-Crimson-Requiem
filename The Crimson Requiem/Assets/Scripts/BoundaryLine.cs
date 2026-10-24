@@ -27,6 +27,7 @@ public class BoundaryLine : MonoBehaviour
     public void TakeDamage(float amount)
     {
         if (IsBroken) return;
+        AudioManager.Instance.Play(AudioManager.Instance.shieldHit);
         OnBoundaryHPChange?.Invoke(currentHP,maxHP);
         currentHP -= amount;
         currentHP = Mathf.Clamp(currentHP, 0f, maxHP);

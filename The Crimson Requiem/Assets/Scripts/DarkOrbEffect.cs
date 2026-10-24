@@ -9,8 +9,7 @@ public class DarkOrbEffect : MonoBehaviour , ISpellEffect
     const float firePointOffset = 1f; // Offset to position the fire point slightly in front of the caster
     public void Cast(Vector3 origin, Vector3 direction, SpellData data)
     {
-        // animator.SetTrigger("CastAnim");
-        // animator.SetTrigger("Attack");
+        AudioManager.Instance.Play(AudioManager.Instance.darkOrbCast, 1f, true);
         GameObject orb = Instantiate(orbPrefab, origin, Quaternion.identity);
         Rigidbody rb = orb.GetComponent<Rigidbody>();
         origin.y = firePointOffset; // Keep the y-coordinate the same as the fire point

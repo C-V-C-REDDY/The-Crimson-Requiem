@@ -88,6 +88,7 @@ public class Enemy : MonoBehaviour
     {
         float damage = amount * damageTakenMultiplier;
         currentHealth -= damage;
+        AudioManager.Instance.Play(AudioManager.Instance.enemyDeath, 0.8f, true);
         currentHealth = Mathf.Clamp(currentHealth, 0, data.maxHealth);
         healthBar.value = currentHealth;
         if (source != DamageSource.ElementalSpell)

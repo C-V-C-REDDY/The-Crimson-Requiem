@@ -83,6 +83,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastWater()
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         ToastUI.Instance.Show("Casting WaterFogSpell : Enemies Slowed");
         OnCastWater?.Invoke();
         isCasting = true;
@@ -123,6 +124,7 @@ public class ElementalCaster : MonoBehaviour
 
     private IEnumerator CastWind(WindSpellData data)
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         OnCastWind?.Invoke();
         GameObject tornado = Instantiate(data.tornadoPrefab, data.tornadoPosition, Quaternion.identity);
         var enemies = new List<Enemy>(EnemyManager.Instance.activeEnemies);
@@ -144,6 +146,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastIce(IceSpellData data)
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         OnCastIce?.Invoke();
         ToastUI.Instance.Show("Casting IceSpell : Enemies Frozen");
         isCasting = true;
@@ -173,6 +176,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastLightning(LightningSpellData d)
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         OnCastLightning?.Invoke();
         ToastUI.Instance.Show("Casting LightningSpell : Heavy Damage On All Enemies");
         isCasting = true;
@@ -216,6 +220,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastFire(FireSpellData fire)
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         OnCastFire?.Invoke();
         ToastUI.Instance.Show("Casting FireSpell : Burning Enemies");
         JuiceManager.Instance.ScreenShake(0.5f,0.5f);
@@ -240,6 +245,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastEarth(EarthSpellData earth)
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         OnCastEarth?.Invoke();
         ToastUI.Instance.Show("Casting EarthSpell : 2X Damage On Enemies");
         JuiceManager.Instance.ScreenShake(0.5f,0.5f);
@@ -262,6 +268,7 @@ public class ElementalCaster : MonoBehaviour
 
     IEnumerator CastGalaxyTour(GalaxyTourData data)
     {
+        AudioManager.Instance.Play(AudioManager.Instance.spellCast);
         OnCastGalaxy?.Invoke();
         isCasting = true;
 

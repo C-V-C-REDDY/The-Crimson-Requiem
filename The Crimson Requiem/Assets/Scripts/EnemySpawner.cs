@@ -84,6 +84,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void GotoNextWave()
     {
+        AudioManager.Instance.Play(AudioManager.Instance.waveClear);
         currentWave++;
         if (currentWave >= waves.Length)
         {

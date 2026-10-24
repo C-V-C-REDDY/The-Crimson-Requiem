@@ -37,6 +37,7 @@ public class PlayerManager : MonoBehaviour
     public void TakeDamage(float damage)
     {
         Debug.Log(currentHealth);
+        AudioManager.Instance.Play(AudioManager.Instance.playerHit);
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
         OnHealthChanged?.Invoke(currentHealth, maxHealth);
