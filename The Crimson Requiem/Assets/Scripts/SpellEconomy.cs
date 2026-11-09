@@ -1,5 +1,19 @@
 using UnityEngine;
 
+/// <summary>
+/// 
+/// WHAT: Tracks kills and elemental spell charges (1 charge per 15 Dark Orb kills, max 3).
+/// 
+/// USED BY: ElementalCaster (TryCastElemental), Enemy.Die (OnPlayerKill), HUD scripts via events.
+/// 
+/// DEPENDS ON: Nothing. It's a standalone singleton.
+/// 
+/// NOTE: Boundary kills don't count (DamageSource.Boundary), only player-spell kills do.
+/// 
+/// </summary>
+
+
+// public class SpellEconomy : MonoBehaviour
 public class SpellEconomy : MonoBehaviour
 {
     public static SpellEconomy Instance {get; private set;}

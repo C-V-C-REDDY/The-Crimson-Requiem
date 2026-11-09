@@ -22,5 +22,15 @@ public class BoundaryBarUI : MonoBehaviour
     private void UpdateUI(float current, float max)
     {
         BoundaryFill.fillAmount = current / max;
+        if(current <= 0)
+        {
+            OnBoundaryBreached();
+        }
+    }
+
+    private void OnBoundaryBreached()
+    {
+        BoundaryFill.fillAmount = 0f;
+        ToastUI.Instance.Show("Boundary Breached! Run!!");
     }
 }

@@ -1,3 +1,12 @@
+
+
+/// <summary>
+/// WHAT: Chase and attack behaviour for every enemy type. Stats come from its EnemyData asset.
+/// USED BY: spells (reaction methods), boundary line, hazards. DEPENDS ON: EnemyData, NavMeshAgent,EnemyManager, SpellEconomy, PlayerManager.
+/// NOTE: personalOffset on the destination stops enemies queuing in a single-file line.
+/// <summary>
+
+
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -30,7 +39,7 @@ public class Enemy : MonoBehaviour
     private bool isCaught = false;
 
     private bool isDead = false;
-    public IReadOnlyList<Enemy> ActiveEnemies => ActiveEnemies;
+    // public IReadOnlyList<Enemy> ActiveEnemies => ActiveEnemies;
 
 
 
@@ -50,12 +59,13 @@ public class Enemy : MonoBehaviour
         healthBar.value = currentHealth;
         baseMoveSpeed = agent.speed;
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        BoundaryLine.Instance.OnBoundaryBroken += OnBoundaryBroken;
         
     }
 
     void Update()
     {
-        if(isCaught || isDead || isDoomed) return; // Skip chasing and attacking if caught in tornado or dead
+        if(isCaught || isDead || isDoomed || PlayerManager.Instance.isDead) return; // Skip chasing and attacking if caught in tornado or dead
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
         if (!agent.enabled || !agent.isOnNavMesh) return; // Ensure the agent is enabled and on the NavMesh
          if (distanceToPlayer > data.attackRange)
@@ -69,11 +79,18 @@ public class Enemy : MonoBehaviour
             animator.SetBool("IsChasing", false);
             TryAttack();
         }
+
+        if(isBoundaryBroken)
+        {
+            if(agent != null)
+            {
+                agent.speed = baseMoveSpeed * 1.5f; // Increase speed by 50%
+            }
+        }
             
-        
-        
     }
 
+// ----- Attack Logic -----
     void TryAttack()
     {
         if (Time.time - lastAttackTime >= data.attackCooldown)
@@ -83,6 +100,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+
+
+
+
+// ----- Damage Logic -----
 
     public void TakeDamage(float amount, DamageSource source)
     {
@@ -103,13 +125,12 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-
             animator.SetTrigger("Hit");
-            // StartCoroutine(Flash(0.08f)); // Flash for 0.08 seconds
- // Screen shake with a force of 0.1f
         }
     }
 
+
+// ----- Death Logic -----
     void Die(DamageSource source)
     {
         if(source == DamageSource.PlayerSpell)
@@ -122,6 +143,7 @@ public class Enemy : MonoBehaviour
         animator.SetTrigger("Die");
         isDead = true;
         agent.enabled = false;
+        PlayerManager.Instance.currentHealth += data.healthOnKill; // Heal the player when this enemy dies
         this.enabled = false; // Disable the Enemy script to stop further updates
         EnemyManager.Instance.UnregisterEnemy(this);
         GetComponent<Collider>().enabled = false; // Disable the collider to prevent further interactions
@@ -134,6 +156,17 @@ public class Enemy : MonoBehaviour
         Destroy(gameObject);
     }
 
+
+
+
+
+//                                      ------ Elemental Effects ------
+
+
+
+
+// Slow Effect---
+
     public void ApplySlow(float multiplier, float duration)
     {
         Debug.Log("Slow applied");
@@ -142,24 +175,30 @@ public class Enemy : MonoBehaviour
 
     }
 
+
     IEnumerator SlowRoutine(float multiplier, float duration)
     {
-        // GameObject vfx = Instantiate(slowVfx, transform);
-        // vfx.transform.localPosition = Vector3.zero;
         agent.speed = baseMoveSpeed * multiplier;
         animator.speed = multiplier; // Adjust animation speed to match the slow effect
         yield return new WaitForSeconds(duration);
-        // Destroy(vfx,2f);
         agent.speed = baseMoveSpeed;
         animator.speed = 1f; // Reset animation speed to normal
         slowCoroutine = null;
     }
 
+
+
+
+
+
+
+// Tornado Effect -----
     public void ApplyTornado(WindSpellData data)
     {
         Debug.Log("Tornado applied");
         StartCoroutine(TornadoRoutine(data));
     }
+
 
     private IEnumerator TornadoRoutine(WindSpellData data)
     {
@@ -211,11 +250,19 @@ public class Enemy : MonoBehaviour
         isCaught = false;
     }
 
+
+
+
+
+// Shock Effect -----
+
+
     public void ApplyShock(float duration, float magnitude)
     {
         ApplySlow(0f, duration);
         StartCoroutine(ShockShake(duration, magnitude));
     }
+
 
     IEnumerator ShockShake(float duration, float magnitude)
     {
@@ -229,6 +276,12 @@ public class Enemy : MonoBehaviour
         }
         if(visual != null) visual.localPosition = basePos; // Reset position if the visual still exists
     }
+
+
+
+
+
+// Burn Effect -----
 
     Coroutine burnRoutine;
     GameObject burnVFX;
@@ -246,6 +299,7 @@ public class Enemy : MonoBehaviour
         
     }
 
+
     IEnumerator BurnRoutine(float damagePerTick, float tickInterval, float duration)
     {
         float elapsed = 0f;
@@ -258,6 +312,8 @@ public class Enemy : MonoBehaviour
         StopBurn();
     }
 
+
+
     void StopBurn()
     {
         if(burnRoutine != null) {StopCoroutine(burnRoutine); burnRoutine = null; }
@@ -269,6 +325,13 @@ public class Enemy : MonoBehaviour
             burnVFX = null;
         }
     }
+
+
+
+
+
+// Armor Break Effect -----
+
 
     float damageTakenMultiplier = 1f;
     Coroutine armorBreakRoutine;
@@ -286,11 +349,13 @@ public class Enemy : MonoBehaviour
         armorBreakRoutine = StartCoroutine(ArmorBreakRoutine(duration));
     }
 
+
     IEnumerator ArmorBreakRoutine(float duration)
     {
         yield return new WaitForSeconds(duration);
         ClearArmorBreak();
     }
+
 
     void ClearArmorBreak()
     {
@@ -298,6 +363,12 @@ public class Enemy : MonoBehaviour
         armorBreakRoutine = null;
         if(armorBreakVFX != null) { Destroy(armorBreakVFX); armorBreakVFX = null; }
     }
+
+
+
+
+
+// Galaxy Tour Effect -----
 
     private bool isDoomed;
     public bool IsDoomed => isDoomed;
@@ -307,9 +378,11 @@ public class Enemy : MonoBehaviour
         if (isDoomed) return;
         isDoomed = true;
 
+
         StopAllCoroutines();
         StartCoroutine(GalaxyDoomCoroutine(duration, depth));
     }
+
 
     private IEnumerator GalaxyDoomCoroutine(float duration, float depth)
     {
@@ -340,13 +413,29 @@ public class Enemy : MonoBehaviour
         transform.position = end;
     }
 
+
+
+// Boundary Line Interaction -----
+
+    float BoundaryDamage = 50f; // Damage dealt to the enemy when it touches the boundary line
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("BoundaryLine"))
         {
             BoundaryLine.Instance.TakeDamage(data.damage);
             Debug.Log("Enemy Killed by Boundary Line!");
-            TakeDamage(currentHealth, DamageSource.Boundary); // Enemy dies after hitting the boundary line
+            TakeDamage( BoundaryDamage, DamageSource.Boundary); // Enemy dies after hitting the boundary line
         }
+    }
+
+// Boundary Line Broken Event Handling -----
+
+
+private bool isBoundaryBroken = false;
+    private void OnBoundaryBroken()
+    {
+        Debug.Log("Boundary Broken! Enemies are Faster.");
+        isBoundaryBroken = true;
+
     }
 }

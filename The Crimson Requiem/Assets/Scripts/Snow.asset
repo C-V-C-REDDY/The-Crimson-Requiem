@@ -22,5 +22,4 @@ MonoBehaviour:
   tickInterval: 0.5
   damage: 0
   slowFactor: 0.5
-  affectsPlayer: 1
   affectsEnemies: 1

@@ -20,7 +20,6 @@ MonoBehaviour:
   radius: 10
   activeDuaration: 2.5
   tickInterval: 0.5
-  damage: 10
+  damage: 30
   slowFactor: 0
-  affectsPlayer: 1
   affectsEnemies: 1

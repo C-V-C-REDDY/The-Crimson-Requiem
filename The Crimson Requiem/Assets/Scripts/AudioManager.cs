@@ -1,3 +1,6 @@
+
+/// AudioManager: pooled AudioSources for SFX plus background music.
+
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -15,7 +18,7 @@ public class AudioManager : MonoBehaviour
 
     [Header("Music")]
     public AudioClip backgroundMusic;
-    [Range(0f, 1f)] public float musicVolume = 0.4f;
+    [UnityEngine.Range(0f, 1f)] public float musicVolume = 0.4f;
 
     [Header("Settings")]
     [SerializeField] int poolSize = 8;
@@ -30,7 +33,6 @@ public class AudioManager : MonoBehaviour
     {
         if(Instance != null && Instance != this) { Destroy(gameObject); return;}
         Instance = this;
-
         pool = new AudioSource[poolSize];
         for (int i = 0; i < poolSize; i++)
         {
@@ -52,15 +54,22 @@ public class AudioManager : MonoBehaviour
 
     public void Play(AudioClip clip, float volume = 1f, bool randomPitch = false)
     {
-        if(clip == null) return;
+        if(clip == null || pool == null) return;
 
         AudioSource src = pool[nextIndex];
+
+        if(src == null) return;
         nextIndex = (nextIndex + 1) % pool.Length;
 
         src.pitch = randomPitch
             ? 1f + Random.Range(-pitchVariation, pitchVariation)
             : 1f;
         src.PlayOneShot(clip, volume);
+    }
+
+    void Destroy()
+    {
+       if(Instance == this) Instance = null;         
     }
 
 }

@@ -1,13 +1,28 @@
+
+
+/// <summary>
+/// WHAT: Singleton for Yami's position, health, TakeDamage / Die and the OnHealthChanged event.
+/// USED BY: Enemy (target position, damage), HP bar UI, DamageVignetteUI (verify).
+/// DEPENDS ON: Nothing. It's a standalone singleton.
+/// NOTE: PlayerManager is a singleton so that enemies can always find the player, even if the player is destroyed and respawned.
+/// <summary>
+
 using System;
-using UnityEngine;
-using Unity.Collections;
 using System.Collections;
+using UnityEngine;
+
 
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance;
 
+    public bool isDead = false;
+
     public Transform playerTransform;
+
+    public GameObject DebuffVFX;
+
+    public event System.Action OnDied;
 
     [Header("Health")]
     public float maxHealth = 100f;
@@ -21,19 +36,34 @@ public class PlayerManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            isDead = false;
+            currentHealth = maxHealth;
         }
         else
         {
             Destroy(gameObject);
         }
+        DebuffVFX.transform.position = playerTransform.position + new Vector3(-1.5f, 0, -1.2f); // Adjust the position of the DebuffVFX to be above the player
+        DebuffVFX.SetActive(false);
+        
     }
 
     void Start()
     {
         currentHealth = maxHealth;
+        BoundaryLine.Instance.OnBoundaryBroken += () => StartCoroutine(OnBoundaryBreached());
     }
 
+    void Update()
+    {
+        if(currentHealth > maxHealth)
+        {
+            currentHealth = maxHealth;
+        }
+    }
+
+
+    // ----- Damage Logic -----
     public void TakeDamage(float damage)
     {
         Debug.Log(currentHealth);
@@ -48,17 +78,30 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    public void ApplySlow(float slow, float duration)
-    {
-        Debug.Log("Applying slow!");
-    }
 
 
+// ----- Death Logic -----
     void Die()
     {
-        // Handle player death (e.g., reload scene, show game over screen)
+        OnDied?.Invoke();
+        isDead = true;
         Debug.Log("Player has died.");
     }
+
+// ----- Health Logic -----
+
+private IEnumerator OnBoundaryBreached()
+    {
+       DebuffVFX.SetActive(true);
+       DebuffVFX.transform.position = playerTransform.position + new Vector3(-1.5f, 0, -1.2f);
+       while(currentHealth > 0)
+       {
+            TakeDamage(2f);
+            yield return new WaitForSeconds(1f);
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+       }
+    }
+
 
 
 }

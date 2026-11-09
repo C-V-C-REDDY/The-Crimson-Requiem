@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: BlueEnemy
   maxHealth: 10
-  moveSpeed: 15
-  damage: 5
+  moveSpeed: 20
+  damage: 10
+  healthOnKill: 2
   attackRange: 1.5
   attackCooldown: 1
   attackWindup: 0

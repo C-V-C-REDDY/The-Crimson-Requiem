@@ -1,3 +1,13 @@
+
+
+
+/// <summary>
+/// WHAT: Generic feedback triggers (ScreenShake, hit-stop) via a Cinemachine impulse source.
+/// USED BY: DarkOrbProjectile, ElementalCaster, hazards (verify).
+/// </summary>
+
+
+
 using UnityEngine;
 using System.Collections;
 using Unity.Cinemachine;
@@ -10,6 +20,7 @@ public class JuiceManager : MonoBehaviour
 
     void Awake()
     {
+        if(Instance != null && Instance != this) { Destroy(gameObject); return;}
         Instance = this;
     }
 

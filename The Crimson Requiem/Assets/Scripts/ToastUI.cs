@@ -1,3 +1,6 @@
+
+/// ToastUI: queued typewriter messages in the bottom bar, called from spells and waves.
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +21,7 @@ public class ToastUI : MonoBehaviour
 
     private void Awake()
     {
+        if(Instance != null && Instance != this) { Destroy(gameObject); return;}
         Instance = this;
         group.alpha = 0f;
     }

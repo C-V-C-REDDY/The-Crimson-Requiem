@@ -134,7 +134,7 @@ Material:
     - _DstBlend: 10
     - _DualColorsEnabled: 1
     - _DualColorsState: 0
-    - _GlobalAlpha: 0.5
+    - _GlobalAlpha: 0.617
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -212,3 +212,4 @@ Material:
     - _TintColor: {r: 2.858622, g: 0.25919852, b: 0, a: 1}
     - _UVNoiseSpeed: {r: 0, g: 0, b: 0.2, a: -0.2}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

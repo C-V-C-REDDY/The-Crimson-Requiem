@@ -1,3 +1,13 @@
+
+
+/// <summary>
+/// WHAT: Moves the orb straight, deals damage on trigger with an "Enemy"-tagged collider, then destroys itself.
+/// DEPENDS ON: Enemy.TakeDamage(amount, DamageSource.PlayerSpell).
+/// NOTE: Orb Direction logic is in DarkOrbEffect.cs, Here only Damage and impact Vfx.
+/// <summary>
+
+
+
 using UnityEngine;
 
 public class DarkOrbProjectile : MonoBehaviour
@@ -11,7 +21,6 @@ public class DarkOrbProjectile : MonoBehaviour
         Debug.Log("DarkOrbProjectile collided with: " + other.name);
         if (other.CompareTag("Enemy"))
         {
-            // Assuming the enemy has a method to take damage
             other.GetComponent<Enemy>().TakeDamage(damage, Enemy.DamageSource.PlayerSpell);
 
             GameObject impactEffect = Instantiate(impactEffectPrefab, transform.position, Quaternion.identity); // Instantiate the impact effect

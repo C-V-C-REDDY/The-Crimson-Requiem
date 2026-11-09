@@ -12,15 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64cc13395dde8154293c43fa54dfa37e, type: 3}
   m_Name: Laser
   m_EditorClassIdentifier: Assembly-CSharp::HazardData
-  effect: 1
+  effect: 0
   zonePrefab: {fileID: 7478731271839673279, guid: 4d3c8045dd8857a4b8d34c2361c61045, type: 3}
   targetLayers:
     serializedVersion: 2
     m_Bits: 136
-  radius: 20
+  radius: 30
   activeDuaration: 2.5
   tickInterval: 0.5
   damage: 0
   slowFactor: 0.5
-  affectsPlayer: 1
   affectsEnemies: 1

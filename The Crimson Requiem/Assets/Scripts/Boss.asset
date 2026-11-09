@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyData
   enemyName: Boss
   maxHealth: 200
-  moveSpeed: 0.5
+  moveSpeed: 2
   damage: 100
   attackRange: 1.5
   attackCooldown: 1
   attackWindup: 0
-  detectionRange: 15
+  detectionRange: 100

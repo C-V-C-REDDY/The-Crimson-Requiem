@@ -40,11 +40,6 @@ public class HazardZone : MonoBehaviour
                 continue;
             }
 
-            var p = h.GetComponentInParent<PlayerManager>();
-            if(p != null && data.affectsPlayer && seen.Add(p))
-            {
-                ApplyToPlayer(p);
-            }
         }
 
         void ApplyToEnemy(Enemy e)
@@ -57,19 +52,6 @@ public class HazardZone : MonoBehaviour
                 case HazardEffect.Slow:
                     e.ApplySlow(data.slowFactor, data.tickInterval * 1.5f);
                     break;
-            }
-        }
-
-        void ApplyToPlayer(PlayerManager p)
-        {
-            switch(data.effect)
-            {
-                case HazardEffect.Damage:
-                    p.TakeDamage(data.damage);
-                    break;
-                case HazardEffect.Slow:
-                   p.ApplySlow(data.slowFactor, data.tickInterval * 1.5f);
-                   break;
             }
         }
     }

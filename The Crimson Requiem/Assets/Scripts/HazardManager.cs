@@ -1,3 +1,9 @@
+
+// HazardManager.cs / HazardZone.cs / HazardData.cs
+/// WHAT: Telegraphs a smoke signal at a hand-placed point, then triggers a random hazard that
+///       damages and slows enemies in a radius (OverlapSphere ticks).
+/// NOTE: HazardData holds the numbers and VFX, HazardZone runs the effect, HazardManager picks where and when.
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;

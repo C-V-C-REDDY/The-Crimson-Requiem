@@ -1,3 +1,9 @@
+/// <summary>
+/// WHAT: Registry of active enemies; decides when a wave is resolved.
+/// USED BY: EnemySpawner (register, NotifyWaveFullySpawned), Enemy (unregister), spells (ActiveEnemies).
+/// NOTE: A wave advances only when it is fully spawned AND the active list is empty.
+/// <summary>
+
 using UnityEngine;
 using System.Collections.Generic;
 public class EnemyManager : MonoBehaviour
@@ -9,14 +15,8 @@ public class EnemyManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if(Instance != null && Instance != this) { Destroy(gameObject); return;}
+        Instance = this;
     }
 
     public void RegisterEnemy(Enemy enemy)

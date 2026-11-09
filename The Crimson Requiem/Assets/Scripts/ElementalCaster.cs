@@ -1,3 +1,18 @@
+
+/// <summary>
+/// WHAT: Handles input and casting sequences for all elemental spells (Water, Wind, Ice,
+///       Lightning, Fire, Earth). One coroutine per spell orchestrates VFX, timing, tint,
+///       screen shake and enemy reactions.
+/// USED BY: Player.cs (subscribes to the cast event to trigger the "CastAnim" animator trigger),
+///          ArsenalUI (subscribes to highlight the slot), ToastUI (no-charge / recharging messages).
+/// DEPENDS ON: SpellEconomy (TryCastElemental: charge + cooldown check), EnemyManager (ActiveEnemies),
+///             JuiceManager (screen shake), the per-spell SpellData assets, URP Global Volume (tint).
+/// NOTE: SpellData assets only hold numbers and prefabs; all behaviour lives here and in Enemy
+///       reaction methods (ApplySlow, ApplyTornado, ApplyShock...). An isCasting guard prevents
+///       overlapping casts, and a shared TintRoutine handles every environment colour change.
+/// </summary>
+
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,9 +34,23 @@ public class ElementalCaster : MonoBehaviour
     [SerializeField] Volume globalVolume;
     ColorAdjustments colorAdj;
     bool isCasting = false;
-    bool galaxyUnloucked = false;
+    bool galaxyUnlocked = false;
+    bool windUnlocked = false;
+    bool iceUnlocked = false;
+    bool lightningUnlocked = false;
+    bool fireUnlocked = false;
+    bool earthUnlocked = false;
+
+
+
+
     void OnEnable() {EnemySpawner.OnFloodWaveFullySpawned += UnlockGalaxy;}
-    void OnDisable() {EnemySpawner.OnFloodWaveFullySpawned -= UnlockGalaxy;}
+    void OnDisable() {EnemySpawner.OnFloodWaveFullySpawned -= UnlockGalaxy;
+    EnemySpawner.OnwindUnlocked -= UnlockWind;
+    EnemySpawner.OnIceUnlocked -= UnlockIce;
+    EnemySpawner.OnLightningUnlocked -= UnlockLightning;
+    EnemySpawner.OnFireUnlocked -= UnlockFire;
+    EnemySpawner.OnEarthUnlocked -= UnlockEarth;}
 
     public  event System.Action OnCastWater;
     public  event System.Action OnCastWind;
@@ -31,32 +60,40 @@ public class ElementalCaster : MonoBehaviour
     public  event System.Action OnCastEarth;
     public  event System.Action OnCastGalaxy;
 
-    void UnlockGalaxy() {galaxyUnloucked = true; }
+    void UnlockGalaxy() {galaxyUnlocked = true; Debug.Log("Galaxy spell unlocked!"); ToastUI.Instance.Show("ULTIMATE SPELL : GALAXY TOUR UNLOCKED!");}
+    void UnlockWind() {windUnlocked = true; Debug.Log("Wind spell unlocked!"); ToastUI.Instance.Show("ELEMENTAL SPELL : WIND UNLOCKED!");}
+    void UnlockIce() {iceUnlocked = true; Debug.Log("Ice spell unlocked!"); ToastUI.Instance.Show("ELEMENTAL SPELL : ICE UNLOCKED!");}
+    void UnlockLightning() {lightningUnlocked = true; Debug.Log("Lightning spell unlocked!"); ToastUI.Instance.Show("ELEMENTAL SPELL : LIGHTNING UNLOCKED!");}
+    void UnlockFire() {fireUnlocked = true; Debug.Log("Fire spell unlocked!"); ToastUI.Instance.Show("ELEMENTAL SPELL : FIRE UNLOCKED!");}
+    void UnlockEarth() {earthUnlocked = true; Debug.Log("Earth spell unlocked!"); ToastUI.Instance.Show("ELEMENTAL SPELL : EARTH UNLOCKED!");}
 
     void Awake()
     {
-        if(Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if(Instance != null && Instance != this) { Destroy(gameObject); return;}
+        Instance = this;
         globalVolume.profile.TryGet(out colorAdj);
+    }
+
+    void Start()
+    {
+    EnemySpawner.OnwindUnlocked += UnlockWind;
+    EnemySpawner.OnIceUnlocked += UnlockIce;
+    EnemySpawner.OnLightningUnlocked += UnlockLightning;
+    EnemySpawner.OnFireUnlocked += UnlockFire;
+    EnemySpawner.OnEarthUnlocked += UnlockEarth;
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) 
-        {
-            Debug.Log("1 Pressed");
-            TryCastWater();
-        }
+
+        if (PlayerManager.Instance.isDead) return;
+        
+        if (Input.GetKeyDown(KeyCode.Alpha1)) TryCastWater();
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            if(!windUnlocked) return;
             if(SpellEconomy.Instance.TryCastElemental())
             {
-                Debug.Log("2 Pressed");
+                ToastUI.Instance.Show("Casting WindSpell : Tornado - Pulls Enemies");
                 OnCastStarted?.Invoke();
                 StartCoroutine(CastWind(windData));
             }
@@ -67,10 +104,13 @@ public class ElementalCaster : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha6)) TryCastEarth();
         if(Input.GetKeyDown(KeyCode.Alpha7))
         {
-            if(!galaxyUnloucked) return;
+            if(!galaxyUnlocked) return;
              TryCastGalaxyTour();
         }
     }
+
+
+//Water Spell -----
 
     void TryCastWater()
     {
@@ -80,6 +120,8 @@ public class ElementalCaster : MonoBehaviour
         OnCastStarted?.Invoke();
         StartCoroutine(CastWater());
     }
+
+
 
     IEnumerator CastWater()
     {
@@ -103,6 +145,8 @@ public class ElementalCaster : MonoBehaviour
         isCasting = false;
     }
 
+
+// Fade Tint Routines-----
     IEnumerator TintRoutine(Color color, float fadeIn, float hold, float fadeOut)
     {
         colorAdj.colorFilter.overrideState = true;
@@ -122,6 +166,10 @@ public class ElementalCaster : MonoBehaviour
         colorAdj.colorFilter.value = to;
     }
 
+
+// Wind Spell -----
+
+
     private IEnumerator CastWind(WindSpellData data)
     {
         AudioManager.Instance.Play(AudioManager.Instance.spellCast);
@@ -136,8 +184,14 @@ public class ElementalCaster : MonoBehaviour
         Destroy(tornado);
     }
 
+
+
+// Ice Spell -----
+
+
     void TryCastIce()
     {
+        if(!iceUnlocked) return;
         if(isCasting) return;
         if(!SpellEconomy.Instance.TryCastElemental()) return;
         OnCastStarted?.Invoke();
@@ -156,7 +210,7 @@ public class ElementalCaster : MonoBehaviour
         JuiceManager.Instance.ScreenShake(data.shakeforce, 0.1f);
 
         yield return new WaitForSeconds(data.impactDelay);
-        // JuiceManager.Instance.Hitstop(0.1f);
+
 
         foreach(Enemy e in new List<Enemy>(EnemyManager.Instance.activeEnemies))
         {
@@ -166,8 +220,14 @@ public class ElementalCaster : MonoBehaviour
         isCasting = false;
     }
 
+
+
+// Lightning Spell -----
+
+
     void TryCastLightning()
     {
+        if(!lightningUnlocked) return;
         if(isCasting) return;
         if(!SpellEconomy.Instance.TryCastElemental()) return;
         OnCastStarted?.Invoke();
@@ -185,7 +245,7 @@ public class ElementalCaster : MonoBehaviour
         yield return FadeTint(Color.white, d.dimColor, d.telegraphTime);
         JuiceManager.Instance.ScreenShake(d.shakeForce, d.shakeDuration);
         JuiceManager.Instance.Hitstop(d.hitStopTime);
-        // Coroutine tint = StartCoroutine(TintRoutine(d.tintColor, d.tintFadeIn, d.tintHold, d.tintFadeOut));
+
         
         foreach(var enemy in new List<Enemy>(EnemyManager.Instance.activeEnemies))
            if(enemy != null) StartCoroutine(StrikeEnemy(enemy, d));
@@ -210,13 +270,20 @@ public class ElementalCaster : MonoBehaviour
         e.TakeDamage(d.damage, Enemy.DamageSource.PlayerSpell);
     }
 
+
+// Fire Spell -----
+
+
     void TryCastFire()
     {
+        if(!fireUnlocked) return;
         if(isCasting) return;
         if(!SpellEconomy.Instance.TryCastElemental()) return;
         OnCastStarted?.Invoke();
         StartCoroutine(CastFire(fireSpellData));
     }
+
+
 
     IEnumerator CastFire(FireSpellData fire)
     {
@@ -235,13 +302,21 @@ public class ElementalCaster : MonoBehaviour
         }
         yield return new WaitForSeconds(fire.burnDuration);
     }
+
+
+
+    // Earth Spell -----
+
+
     void TryCastEarth()
     {
+        if(!earthUnlocked) return;
         if(isCasting) return;
         if(!SpellEconomy.Instance.TryCastElemental()) return;
         OnCastStarted?.Invoke();
         StartCoroutine(CastEarth(earthSpellData));
     }
+
 
     IEnumerator CastEarth(EarthSpellData earth)
     {
@@ -259,10 +334,16 @@ public class ElementalCaster : MonoBehaviour
         yield return new WaitForSeconds(earth.duration);
     }
 
+
+// Galaxy Tour Spell -----
+
+
+
     void TryCastGalaxyTour()
     {
         if(isCasting) return;
         OnCastStarted?.Invoke();
+        ToastUI.Instance.Show("Casting ULTIMATE SPELL : GALAXY TOUR - Kills All Enemies");
         StartCoroutine(CastGalaxyTour(galaxyTourData));
     }
 

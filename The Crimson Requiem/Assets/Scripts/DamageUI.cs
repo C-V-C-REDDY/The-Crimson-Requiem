@@ -1,4 +1,7 @@
-using System;
+
+/// DamageUI: red screen vignette driven by boundary shield HP.
+
+
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -1,3 +1,10 @@
+
+/// <summary>
+/// WHAT: Dark Orb only. Mouse click fires an orb along the camera ray with a timestamp cooldown.
+/// USED BY: Player input flow. DEPENDS ON: SpellData (DarkOrb asset), DarkOrbEffect, DarkOrbProjectile.
+/// NOTE: Deliberately separate from ElementalCaster, since Dark Orb is projectile-based and elementals are global.
+/// </summary>
+
 using UnityEngine;
 
 public class SpellCaster : MonoBehaviour
@@ -34,8 +41,6 @@ public class SpellCaster : MonoBehaviour
         }
 
         lastCastTime = Time.time;
-        // animator.SetTrigger("CastAnim");
-
 
         Vector3 direction = GetAimDirection();
         
@@ -43,7 +48,7 @@ public class SpellCaster : MonoBehaviour
         {
             transform.rotation = Quaternion.LookRotation(direction);
         }
-        // animator.SetTrigger("CastAnim");
+
         darkOrbEffect.Cast(firePoint.position, direction, darkOrbData);
     }
 

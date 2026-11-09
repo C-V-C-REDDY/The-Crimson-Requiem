@@ -13,7 +13,7 @@ public class HazardData : ScriptableObject
     public float tickInterval = 0.5f;
     public float damage = 10f;
     public float slowFactor = 0.5f;
-    public bool affectsPlayer = true;
+    // public bool affectsPlayer = true;
     public bool affectsEnemies = true;
     
 }

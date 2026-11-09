@@ -16,5 +16,16 @@ public class WaveData : ScriptableObject
     public float spawnInterval;
     public bool isFloodWave = false;
     public EnemySpawnEntry[] enemyPool;
+
+
+    [System.Serializable]
+    public struct GuaranteedSpawn
+    {
+        public Enemy enemyPrefab;
+        public int count;
+    }
+
+    [Tooltip("Enemies that are guaranteed to spawn in this wave. Use for bosses")]
+    public GuaranteedSpawn[] guaranteedSpawns;
     
     }
